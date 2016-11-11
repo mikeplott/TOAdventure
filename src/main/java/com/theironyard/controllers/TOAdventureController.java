@@ -3,6 +3,7 @@ package com.theironyard.controllers;
 import com.theironyard.entities.User;
 import com.theironyard.services.UserRepo;
 import com.theironyard.utlities.PasswordStorage;
+import org.h2.tools.Server;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,8 +11,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.servlet.http.HttpSession;
+import java.sql.SQLException;
 
 /**
  * Created by michaelplott on 11/10/16.
@@ -21,6 +24,17 @@ public class TOAdventureController {
     @Autowired
     UserRepo users;
 
+    Server h2;
+
+    @PostConstruct
+    public void init() throws SQLException {
+        h2.createWebServer().start();
+    }
+
+    @PreDestroy
+    public void destroy() {
+        h2.stop();
+    }
 
 
     @RequestMapping(path = "/login", method = RequestMethod.POST)
@@ -46,7 +60,7 @@ public class TOAdventureController {
         return users.findFirstByUsername(username);
     }
 
-    @RequestMapping(path = "checkpoint", method = RequestMethod.POST)
+    @RequestMapping(path = "/checkpoint", method = RequestMethod.POST)
     public ResponseEntity<User> setCheckpoint(HttpSession session, @RequestBody User user) {
         String username = (String) session.getAttribute("username");
         if (username == null) {
