@@ -63,6 +63,7 @@ const HomeView = React.createClass({
             <nav>
                <h3>Title</h3>
                <div>
+                  <button className="btn btn-primary"></button>
                   <input type="submit" value="Login"/>
                </div>
             </nav>
