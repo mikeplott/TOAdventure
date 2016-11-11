@@ -16,6 +16,10 @@
 *.iml
 *.ipr
 
+###Client###
+node_modules
+
+
 ### NetBeans ###
 nbproject/private/
 build/
