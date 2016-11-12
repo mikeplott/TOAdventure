@@ -66,6 +66,7 @@ public class TOAdventureController {
         if (avatars.count() == 0) {
             avatars.save(new Avatar("avatars/human-standing.png", Avatar.Animation.STANDING, Avatar.Race.HUMAN));
             avatars.save(new Avatar("avatars/human-jumping.png", Avatar.Animation.JUMPING, Avatar.Race.HUMAN));
+            avatars.save(new Avatar("avatars/human-death.png", Avatar.Animation.DEATH, Avatar.Race.HUMAN));
             avatars.save(new Avatar("avatars/elf-standing.png", Avatar.Animation.STANDING, Avatar.Race.ELF));
             avatars.save(new Avatar("avatars/elf-jumping.png", Avatar.Animation.JUMPING, Avatar.Race.ELF));
             avatars.save(new Avatar("avatars/elf-death.png", Avatar.Animation.DEATH, Avatar.Race.ELF));
