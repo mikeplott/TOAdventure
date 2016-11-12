@@ -37,6 +37,46 @@ let dummyUsers = [
    }
 
 ]
+NavView = React.createClass({
+
+
+   render:function(){
+
+      return(
+         <nav className="navbar navbar-default">
+            <div className="container-fluid">
+               <div className="navbar-header">
+                  <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                     <span className="sr-only">Toggle navigation</span>
+                     <span className="icon-bar"></span>
+                     <span className="icon-bar"></span>
+                     <span className="icon-bar"></span>
+                  </button>
+                  <a className="navbar-brand" href="#">TIY Adventure</a>
+               </div>
+
+               <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                  <ul className="nav navbar-nav">
+                     <li className="active"><a href="#">Link <span className="sr-only">(current)</span></a></li>
+                     <li><a href="#">Link</a></li>
+
+                  </ul>
+                  <form className="navbar-form navbar-left" role="search">
+                     <div className="form-group">
+                     </div>
+                     <button type="submit" className="btn btn-default">Submit</button>
+                  </form>
+                  <ul className="nav navbar-nav navbar-right">
+                     <li><a href="#">Link</a></li>
+                  </ul>
+               </div>
+            </div>
+         </nav>
+      )
+   }
+
+
+})
 
 
 const HomeView = React.createClass({
@@ -60,13 +100,7 @@ const HomeView = React.createClass({
       return (
 
          <div>
-            <nav>
-               <h3>Title</h3>
-               <div>
-                  <button className="btn btn-primary"></button>
-                  <input type="submit" value="Login"/>
-               </div>
-            </nav>
+            <NavView/>
             <div>
                <div>
                   <h2>LeaderBoard</h2>
@@ -99,4 +133,5 @@ const HomeView = React.createClass({
 
 })
 
-module.exports = {HomeView, dummyUsers}
+
+module.exports = {HomeView, dummyUsers, NavView}

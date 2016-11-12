@@ -7,7 +7,6 @@ const ACTIONS = {
 
    fetchUserData: function(){
       let userCollInst = new UserCollection()
-
       return userCollInst.fetch().then(function(){
          STORE.setStore('all_users', userCollInst)
       })
@@ -20,9 +19,6 @@ const ACTIONS = {
       //       let selectedUser = true
       //    }
       //    return selectedUser
-      
-
-
    },
 
    createNewUser: function(modlVals){
