@@ -1,6 +1,8 @@
 const Backbone = require('backbone')
 const {UserModel, UserCollection} = require('./model-users.js')
 const {CharModel, CharCollection} = require('./model-chars.js')
+const {ObstacleModel, ObstacleCollection} = require('./model-assets.js')
+const {AvatarModel, AvatarCollection} = require("./model-avatars.js")
 const STORE = require("./store.js")
 
 const ACTIONS = {
@@ -13,12 +15,26 @@ const ACTIONS = {
 
    },
 
+   getAllAvatars: function(){
+      let avtrs = new AvatarCollection()
+
+      return avtrs.fetch().then(function(){
+         avtrs.models
+
+      })
+   },
+
    handleUserLogin: function(usrName){
-      // this.fetchUserData.filter(usrMdls){
-      //    if(usrMdls.get('username') === usrName){
-      //       let selectedUser = true
-      //    }
-      //    return selectedUser
+
+   },
+// EXECUTE TO GRAB RANDOM ASSETS
+   getObstacles: function(){
+      let obst = new ObstacleCollection()
+
+      obst.fetch().then(function(){
+
+         return obst.models
+      })
    },
 
    createNewUser: function(modlVals){

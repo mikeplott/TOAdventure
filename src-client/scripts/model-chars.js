@@ -18,11 +18,4 @@ const CharCollection = Backbone.Collection.extend({
 
 })
 
-
-
-
-
-
-
-
 module.exports = {CharModel, CharCollection}

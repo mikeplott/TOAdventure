@@ -2,6 +2,7 @@ const React = require('react')
 const ReactDOM = require('react-dom')
 const Backbone = require('backbone')
 const ModalView = require('./modal-view.js')
+const ACTIONS = require('./actions.js')
 
 
 let dummyUsers = [

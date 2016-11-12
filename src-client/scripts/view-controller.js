@@ -1,8 +1,7 @@
 const React = require('react')
 const {HomeView, dummyUsers} = require('./home-view.js')
 const GameView = require("./game-view.js")
-
-
+const ACTIONS = require("./actions.js")
 
 const AppView = React.createClass({
 
@@ -13,7 +12,6 @@ const AppView = React.createClass({
    },
 
    render: function(){
-      console.log(this.state)
       switch (this.props.currentView) {
          case "home":
             return <HomeView/>
