@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.servlet.http.HttpSession;
+import java.net.PasswordAuthentication;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -67,6 +68,7 @@ public class TOAdventureController {
             avatars.save(new Avatar("avatars/human-jumping.png", Avatar.Animation.JUMPING, Avatar.Race.HUMAN));
             avatars.save(new Avatar("avatars/elf-standing.png", Avatar.Animation.STANDING, Avatar.Race.ELF));
             avatars.save(new Avatar("avatars/elf-jumping.png", Avatar.Animation.JUMPING, Avatar.Race.ELF));
+            avatars.save(new Avatar("avatars/elf-death.png", Avatar.Animation.DEATH, Avatar.Race.ELF));
             avatars.save(new Avatar("avatars/dark-elf-standing.png", Avatar.Animation.STANDING, Avatar.Race.DARKELF));
             avatars.save(new Avatar("avatars/dark-elf-jumping.png", Avatar.Animation.JUMPING, Avatar.Race.DARKELF));
             avatars.save(new Avatar("avatars/orc-standing.png", Avatar.Animation.STANDING, Avatar.Race.ORC));
@@ -131,13 +133,19 @@ public class TOAdventureController {
         return new ResponseEntity<User>(user, HttpStatus.OK);
     }
 
+    // route gets avatars that the user can then choose from, this avatar object is expected back in the post route.
+
     @RequestMapping(path = "/signup", method = RequestMethod.GET)
     public Iterable<Avatar> getAvatars() {
         return avatars.findByAnimation(Avatar.Animation.STANDING);
     }
 
-    @RequestMapping(path = "signup", method = RequestMethod.POST)
-    public ResponseEntity<User> getUser(HttpSession session, @RequestBody User user, @RequestBody Avatar avatar) {
+    // route recieves a user object and hashes the password and saves it to the database as well as creating a new character object
+    // setting the default values and saving that to the database. returns a user object.
+
+    @RequestMapping(path = "/signup", method = RequestMethod.POST)
+    public ResponseEntity<User> getUser(HttpSession session, @RequestBody User user, @RequestBody Avatar avatar) throws PasswordStorage.CannotPerformOperationException {
+        user.setPassword(PasswordStorage.createHash(user.getPassword()));
         users.save(user);
         Character character = new Character(avatar.getFilename(), 0, 0, 0, 0, user);
         characters.save(character);
@@ -164,6 +172,20 @@ public class TOAdventureController {
         characterFromDb.setMoney(character.getMoney());
         characterFromDb.setScore(character.getScore());
         characters.save(characterFromDb);
+        return new ResponseEntity<Character>(character, HttpStatus.OK);
+    }
+
+    // route to change the level.
+
+    @RequestMapping(path = "/level", method = RequestMethod.POST)
+    public ResponseEntity<Character> setLevel(HttpSession session, @RequestBody User user) {
+        String username = (String) session.getAttribute("username");
+        if (username == null) {
+            return new ResponseEntity<Character>(HttpStatus.FORBIDDEN);
+        }
+        Character character = characters.findByUser(user);
+        character.setLevel(character.getLevel() + 1);
+        characters.save(character);
         return new ResponseEntity<Character>(character, HttpStatus.OK);
     }
 
@@ -210,7 +232,7 @@ public class TOAdventureController {
 
 
 
-    // route returning a random NPC asset, "NPC asset defined as an enemy, money, items" to the client.
+    // route returning a random NPC asset, "NPC asset defined as an enemy, money, items and health" to the client.
 
     @RequestMapping(path = "/random-asset", method = RequestMethod.GET)
     public NPC getRandomAsset(HttpSession session) {
@@ -251,18 +273,19 @@ public class TOAdventureController {
 
     @RequestMapping(path = "/user-avatar", method = RequestMethod.GET)
     public ArrayList<Avatar> getUserAvatar(HttpSession session) throws Exception {
-//        String username = (String) session.getAttribute("username");
-//        if (username == null) {
-//            throw new Exception("Not logged in");
-//        }
+        String username = (String) session.getAttribute("username");
+        if (username == null) {
+            throw new Exception("Not logged in");
+        }
+        User user = users.findFirstByUsername(username);
         ArrayList<Avatar> theAvatars = new ArrayList<>();
         //User user = users.findFirstByUsername(username);
         //User user = users.findFirstByUsername("mike");
-        User user = users.findFirstByUsername("sam");
+        //User user = users.findFirstByUsername("sam");
         //User user = users.findFirstByUsername("tom");
         //User user = users.findFirstByUsername("rob");
         //User user = users.findFirstByUsername("nick");
-        //Character character = characters.findByUser(user.getId());
+        //Character character = characters.findByUser(user.getId();
         Character character = characters.findByUser(user);
         Avatar avatar = avatars.findByFilename(character.getFilename());
         Avatar avatar1 = avatars.findOne(avatar.getId() + 1);
@@ -271,6 +294,8 @@ public class TOAdventureController {
         return theAvatars;
         //return characters.findByUser(user.getId());
     }
+
+    // route returning all the characters with their scores in the list that is sent back.
 
     @RequestMapping(path = "/highscore", method = RequestMethod.GET)
     public Iterable<Character> getHighscores(HttpSession session) {

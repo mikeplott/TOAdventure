@@ -10,7 +10,8 @@ import javax.persistence.*;
 public class Avatar {
     public enum Animation {
         STANDING,
-        JUMPING;
+        JUMPING,
+        DEATH;
     }
 
     public enum Race {
