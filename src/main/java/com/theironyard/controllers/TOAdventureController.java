@@ -38,15 +38,15 @@ public class TOAdventureController {
     Server h2;
 
     @PostConstruct
-    public void init() throws SQLException {
+    public void init() throws SQLException, PasswordStorage.CannotPerformOperationException {
         h2.createWebServer().start();
 
         if (users.count() == 0) {
-            users.save(new User("mike", "123"));
-            users.save(new User("sam", "123"));
-            users.save(new User("tom", "123"));
-            users.save(new User("rob", "123"));
-            users.save(new User("nick", "123"));
+            users.save(new User("mike", PasswordStorage.createHash("123")));
+            users.save(new User("sam", PasswordStorage.createHash("123")));
+            users.save(new User("tom", PasswordStorage.createHash("123")));
+            users.save(new User("rob", PasswordStorage.createHash("123")));
+            users.save(new User("nick", PasswordStorage.createHash("123")));
         }
 
         if (characters.count() == 0) {
@@ -212,9 +212,9 @@ public class TOAdventureController {
         ArrayList<Avatar> theAvatars = new ArrayList<>();
         //User user = users.findFirstByUsername(username);
         //User user = users.findFirstByUsername("mike");
-        //User user = users.findFirstByUsername("sam");
+        User user = users.findFirstByUsername("sam");
         //User user = users.findFirstByUsername("tom");
-        User user = users.findFirstByUsername("rob");
+        //User user = users.findFirstByUsername("rob");
         //User user = users.findFirstByUsername("nick");
         //Character character = characters.findByUser(user.getId());
         Character character = characters.findByUser(user);
