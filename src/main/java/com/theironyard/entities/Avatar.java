@@ -8,6 +8,19 @@ import javax.persistence.*;
 @Entity
 @Table(name = "avatars")
 public class Avatar {
+    public enum Animation {
+        STANDING,
+        JUMPING;
+    }
+
+    public enum Race {
+        HUMAN,
+        ELF,
+        DARKELF,
+        ORC,
+        SKELETON;
+    }
+
     @Id
     @GeneratedValue
     int id;
@@ -15,15 +28,19 @@ public class Avatar {
     @Column(nullable = false)
     String filename;
 
-    @ManyToOne
-    User user;
+    @Column(nullable = false)
+    Animation animation;
+
+    @Column(nullable = false)
+    Race race;
 
     public Avatar() {
     }
 
-    public Avatar(String filename, User user) {
+    public Avatar(String filename, Animation animation, Race race) {
         this.filename = filename;
-        this.user = user;
+        this.animation = animation;
+        this.race = race;
     }
 
     public int getId() {
@@ -42,11 +59,19 @@ public class Avatar {
         this.filename = filename;
     }
 
-    public User getUser() {
-        return user;
+    public Animation getAnimation() {
+        return animation;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setAnimation(Animation animation) {
+        this.animation = animation;
+    }
+
+    public Race getRace() {
+        return race;
+    }
+
+    public void setRace(Race race) {
+        this.race = race;
     }
 }

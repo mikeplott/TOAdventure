@@ -18,20 +18,14 @@ public class User {
     @Column(nullable = false)
     String password;
 
-    @Column(nullable = false)
-    int score;
 
-    @Column(nullable = false)
-    int money;
 
     public User() {
     }
 
-    public User(String username, String password, int score, int money) {
+    public User(String username, String password) {
         this.username = username;
         this.password = password;
-        this.score = score;
-        this.money = money;
     }
 
     public int getId() {
@@ -56,21 +50,5 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public int getScore() {
-        return score;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
-    }
-
-    public int getMoney() {
-        return money;
-    }
-
-    public void setMoney(int money) {
-        this.money = money;
     }
 }
