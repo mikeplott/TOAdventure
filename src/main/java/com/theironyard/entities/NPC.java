@@ -11,7 +11,8 @@ public class NPC {
     public enum Category {
         ENEMY,
         MONEY,
-        ITEM;
+        ITEM,
+        HEALTH;
     }
     @Id
     @GeneratedValue

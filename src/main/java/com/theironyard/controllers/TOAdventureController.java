@@ -104,6 +104,7 @@ public class TOAdventureController {
             npcs.save(new NPC("items/stonespear.png", NPC.Category.ITEM));
             npcs.save(new NPC("items/torch.png", NPC.Category.ITEM));
             npcs.save(new NPC("items/trident.png", NPC.Category.ITEM));
+            npcs.save(new NPC("health/health.png", NPC.Category.HEALTH));
         }
     }
 
@@ -174,18 +175,21 @@ public class TOAdventureController {
         ArrayList<NPC> theNpcs = new ArrayList<>();
         for (int i = 0; i < 20 + character.getCheckpoint(); i++) {
             double randNum =  Math.random();
-            if (randNum <= .50) {
+            if (randNum <= .70) {
                 int randId = (int) (Math.random() * (16 - 1)) + 1;
                 // int randId = (int) Math.ceil(Math.random() * 15);
                 theNpcs.add(npcs.findOne(randId));
             }
-            else if (randNum > .50 && randNum <= .75) {
+            else if (randNum > .70 && randNum <= .90) {
                 int randId = (int) (Math.random() * (29 - 17)) + 17;
                 //int randId = (int) Math.ceil(Math.random() * 11);
                 theNpcs.add(npcs.findOne(randId));
             }
-            else {
+            else if (randNum > .90 && randNum <= .95) {
                 theNpcs.add(npcs.findOne(16));
+            }
+            else {
+                theNpcs.add(npcs.findOne(29));
             }
         }
         return theNpcs;
