@@ -37,7 +37,7 @@ let dummyUsers = [
    }
 
 ]
-NavView = React.createClass({
+const NavView = React.createClass({
 
 
    render:function(){

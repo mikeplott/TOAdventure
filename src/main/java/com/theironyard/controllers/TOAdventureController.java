@@ -163,6 +163,8 @@ public class TOAdventureController {
         return avatars.findByAnimation(Avatar.Animation.STANDING);
     }
 
+    // route returning an array list of NPC assets
+
     @RequestMapping(path = "random-assets", method = RequestMethod.GET)
     public ArrayList<NPC> getRandomAssets(HttpSession session) {
         //String username = (String) session.getAttribute("username");
@@ -196,12 +198,12 @@ public class TOAdventureController {
     public NPC getRandomAsset(HttpSession session) {
 
         double randNum =  Math.random();
-        if (randNum <= .80) {
+        if (randNum <= .50) {
             int randId = (int) (Math.random() * (16 - 1)) + 1;
             // int randId = (int) Math.ceil(Math.random() * 15);
             return npcs.findOne(randId);
         }
-        else if (randNum > .80 && randNum <= .90) {
+        else if (randNum > .50 && randNum <= .75) {
             int randId = (int) (Math.random() * (29 - 17)) + 17;
             //int randId = (int) Math.ceil(Math.random() * 11);
             return npcs.findOne(randId);
