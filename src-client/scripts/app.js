@@ -14,7 +14,6 @@ const AppRouter = Backbone.Router.extend({
       '': "showHome"
 
    },
-
    showHome: function(){
 
 console.log('hello')
@@ -43,5 +42,7 @@ console.log('hello')
    }
 
 })
+
+
 
    new AppRouter()
