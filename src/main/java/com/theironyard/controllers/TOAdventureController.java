@@ -55,11 +55,11 @@ public class TOAdventureController {
             User user2 = users.findFirstByUsername("tom");
             User user3 = users.findFirstByUsername("rob");
             User user4 = users.findFirstByUsername("nick");
-            characters.save(new Character("avatars/human-standing.png", 0, 0, user));
-            characters.save(new Character("avatars/elf-standing.png", 0, 0, user1));
-            characters.save(new Character("avatars/dark-elf.png", 0, 0, user2));
-            characters.save(new Character("avatars/orc-standing.png", 0, 0, user3));
-            characters.save(new Character("avatars/skeleton-standing.png", 0, 0, user4));
+            characters.save(new Character("avatars/human-standing.png", 0, 0, 0, user));
+            characters.save(new Character("avatars/elf-standing.png", 0, 0, 0, user1));
+            characters.save(new Character("avatars/dark-elf.png", 0, 0, 0, user2));
+            characters.save(new Character("avatars/orc-standing.png", 0, 0, 0, user3));
+            characters.save(new Character("avatars/skeleton-standing.png", 0, 0, 0, user4));
         }
 
         if (avatars.count() == 0) {
@@ -76,34 +76,34 @@ public class TOAdventureController {
         }
 
         if (npcs.count() == 0) {
-            npcs.save(new NPC("npcs/enemy1.png"));
-            npcs.save(new NPC("npcs/enemy2.png"));
-            npcs.save(new NPC("npcs/enemy3.png"));
-            npcs.save(new NPC("npcs/enemy4.png"));
-            npcs.save(new NPC("npcs/enemy5.png"));
-            npcs.save(new NPC("npcs/enemy6.png"));
-            npcs.save(new NPC("npcs/enemy7.png"));
-            npcs.save(new NPC("npcs/enemy8.png"));
-            npcs.save(new NPC("npcs/enemy9.png"));
-            npcs.save(new NPC("npcs/enemy10.png"));
-            npcs.save(new NPC("npcs/enemy11.png"));
-            npcs.save(new NPC("npcs/enemy12.png"));
-            npcs.save(new NPC("npcs/enemy13.png"));
-            npcs.save(new NPC("npcs/enemy14.png"));
-            npcs.save(new NPC("npcs/enemy15.png"));
-            npcs.save(new NPC("money/money.png"));
-            npcs.save(new NPC("items/axe.png"));
-            npcs.save(new NPC("items/billyclub.png"));
-            npcs.save(new NPC("items/hammer.png"));
-            npcs.save(new NPC("items/hatchet.png"));
-            npcs.save(new NPC("items/paddle.png"));
-            npcs.save(new NPC("items/pickaxe.png"));
-            npcs.save(new NPC("items/scimitar.png"));
-            npcs.save(new NPC("items/staff.png"));
-            npcs.save(new NPC("items/staff2.png"));
-            npcs.save(new NPC("items/stonespear.png"));
-            npcs.save(new NPC("items/torch.png"));
-            npcs.save(new NPC("items/trident.png"));
+            npcs.save(new NPC("npcs/enemy1.png", NPC.Category.ENEMY));
+            npcs.save(new NPC("npcs/enemy2.png", NPC.Category.ENEMY));
+            npcs.save(new NPC("npcs/enemy3.png", NPC.Category.ENEMY));
+            npcs.save(new NPC("npcs/enemy4.png", NPC.Category.ENEMY));
+            npcs.save(new NPC("npcs/enemy5.png", NPC.Category.ENEMY));
+            npcs.save(new NPC("npcs/enemy6.png", NPC.Category.ENEMY));
+            npcs.save(new NPC("npcs/enemy7.png", NPC.Category.ENEMY));
+            npcs.save(new NPC("npcs/enemy8.png", NPC.Category.ENEMY));
+            npcs.save(new NPC("npcs/enemy9.png", NPC.Category.ENEMY));
+            npcs.save(new NPC("npcs/enemy10.png", NPC.Category.ENEMY));
+            npcs.save(new NPC("npcs/enemy11.png", NPC.Category.ENEMY));
+            npcs.save(new NPC("npcs/enemy12.png", NPC.Category.ENEMY));
+            npcs.save(new NPC("npcs/enemy13.png", NPC.Category.ENEMY));
+            npcs.save(new NPC("npcs/enemy14.png", NPC.Category.ENEMY));
+            npcs.save(new NPC("npcs/enemy15.png", NPC.Category.ENEMY));
+            npcs.save(new NPC("money/money.png", NPC.Category.MONEY));
+            npcs.save(new NPC("items/axe.png", NPC.Category.ITEM));
+            npcs.save(new NPC("items/billyclub.png", NPC.Category.ITEM));
+            npcs.save(new NPC("items/hammer.png", NPC.Category.ITEM));
+            npcs.save(new NPC("items/hatchet.png", NPC.Category.ITEM));
+            npcs.save(new NPC("items/paddle.png", NPC.Category.ITEM));
+            npcs.save(new NPC("items/pickaxe.png", NPC.Category.ITEM));
+            npcs.save(new NPC("items/scimitar.png", NPC.Category.ITEM));
+            npcs.save(new NPC("items/staff.png", NPC.Category.ITEM));
+            npcs.save(new NPC("items/staff2.png", NPC.Category.ITEM));
+            npcs.save(new NPC("items/stonespear.png", NPC.Category.ITEM));
+            npcs.save(new NPC("items/torch.png", NPC.Category.ITEM));
+            npcs.save(new NPC("items/trident.png", NPC.Category.ITEM));
         }
     }
 
@@ -163,13 +163,39 @@ public class TOAdventureController {
         return avatars.findByAnimation(Avatar.Animation.STANDING);
     }
 
+    @RequestMapping(path = "random-assets", method = RequestMethod.GET)
+    public ArrayList<NPC> getRandomAssets(HttpSession session) {
+        //String username = (String) session.getAttribute("username");
+        User user = users.findFirstByUsername("mike");
+        Character character = characters.findByUser(user);
+        ArrayList<NPC> theNpcs = new ArrayList<>();
+        for (int i = 0; i < 20 + character.getCheckpoint(); i++) {
+            double randNum =  Math.random();
+            if (randNum <= .80) {
+                int randId = (int) (Math.random() * (16 - 1)) + 1;
+                // int randId = (int) Math.ceil(Math.random() * 15);
+                theNpcs.add(npcs.findOne(randId));
+            }
+            else if (randNum > .80 && randNum <= .90) {
+                int randId = (int) (Math.random() * (29 - 17)) + 17;
+                //int randId = (int) Math.ceil(Math.random() * 11);
+                theNpcs.add(npcs.findOne(randId));
+            }
+            else {
+                theNpcs.add(npcs.findOne(16));
+            }
+        }
+        return theNpcs;
+    }
+
+
 
     // route returning a random NPC asset, "NPC asset defined as an enemy, money, items" to the client.
 
     @RequestMapping(path = "/random-asset", method = RequestMethod.GET)
     public NPC getRandomAsset(HttpSession session) {
-        double randNum =  Math.random();
 
+        double randNum =  Math.random();
         if (randNum <= .80) {
             int randId = (int) (Math.random() * (16 - 1)) + 1;
             // int randId = (int) Math.ceil(Math.random() * 15);
@@ -196,7 +222,7 @@ public class TOAdventureController {
         User user = users.findFirstByUsername("mike");
         //User user = users.findFirstByUsername(username);
         //Avatar avatarFromDb = avatars.findOne(avatar.getId() + 1);
-        characters.save(new Character(avatar.getFilename(), 0, 0, user));
+        characters.save(new Character(avatar.getFilename(), 0, 0, 0,user));
         //characters.save(new Character(avatarFromDb.getFilename(), 0, 0, user));
         return avatars.findByRace(avatar.getRace());
     }

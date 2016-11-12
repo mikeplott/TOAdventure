@@ -8,6 +8,11 @@ import javax.persistence.*;
 @Entity
 @Table(name = "npcs")
 public class NPC {
+    public enum Category {
+        ENEMY,
+        MONEY,
+        ITEM;
+    }
     @Id
     @GeneratedValue
     int id;
@@ -15,11 +20,15 @@ public class NPC {
     @Column(nullable = false)
     String filename;
 
+    @Column(nullable = false)
+    Category category;
+
     public NPC() {
     }
 
-    public NPC(String filename) {
+    public NPC(String filename, Category category) {
         this.filename = filename;
+        this.category = category;
     }
 
     public int getId() {
@@ -36,5 +45,13 @@ public class NPC {
 
     public void setFilename(String filename) {
         this.filename = filename;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }
