@@ -114,6 +114,7 @@ public class TOAdventureController {
 
 
     // route allowing users to login to the site and returns a user object to the client.
+
     @RequestMapping(path = "/login", method = RequestMethod.POST)
     public ResponseEntity<User> postUser(HttpSession session, @RequestBody User user) throws PasswordStorage.CannotPerformOperationException, PasswordStorage.InvalidHashException {
         User userFromDb = users.findFirstByUsername(user.getUsername());
@@ -173,12 +174,12 @@ public class TOAdventureController {
         ArrayList<NPC> theNpcs = new ArrayList<>();
         for (int i = 0; i < 20 + character.getCheckpoint(); i++) {
             double randNum =  Math.random();
-            if (randNum <= .80) {
+            if (randNum <= .50) {
                 int randId = (int) (Math.random() * (16 - 1)) + 1;
                 // int randId = (int) Math.ceil(Math.random() * 15);
                 theNpcs.add(npcs.findOne(randId));
             }
-            else if (randNum > .80 && randNum <= .90) {
+            else if (randNum > .50 && randNum <= .75) {
                 int randId = (int) (Math.random() * (29 - 17)) + 17;
                 //int randId = (int) Math.ceil(Math.random() * 11);
                 theNpcs.add(npcs.findOne(randId));
