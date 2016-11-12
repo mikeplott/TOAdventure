@@ -55,11 +55,11 @@ public class TOAdventureController {
             User user2 = users.findFirstByUsername("tom");
             User user3 = users.findFirstByUsername("rob");
             User user4 = users.findFirstByUsername("nick");
-            characters.save(new Character("avatars/human-standing.png", 0, 0, 0, user));
-            characters.save(new Character("avatars/elf-standing.png", 0, 0, 0, user1));
-            characters.save(new Character("avatars/dark-elf.png", 0, 0, 0, user2));
-            characters.save(new Character("avatars/orc-standing.png", 0, 0, 0, user3));
-            characters.save(new Character("avatars/skeleton-standing.png", 0, 0, 0, user4));
+            characters.save(new Character("avatars/human-standing.png", 0, 12, 0, 0, user));
+            characters.save(new Character("avatars/elf-standing.png", 0, 143, 0, 0, user1));
+            characters.save(new Character("avatars/dark-elf.png", 0, 1235, 0, 0, user2));
+            characters.save(new Character("avatars/orc-standing.png", 0, 1234123, 0, 0, user3));
+            characters.save(new Character("avatars/skeleton-standing.png", 0, 13422141, 0, 0, user4));
         }
 
         if (avatars.count() == 0) {
@@ -128,6 +128,19 @@ public class TOAdventureController {
         }
 
         session.setAttribute("username", user.getUsername());
+        return new ResponseEntity<User>(user, HttpStatus.OK);
+    }
+
+    @RequestMapping(path = "/signup", method = RequestMethod.GET)
+    public Iterable<Avatar> getAvatars() {
+        return avatars.findByAnimation(Avatar.Animation.STANDING);
+    }
+
+    @RequestMapping(path = "signup", method = RequestMethod.POST)
+    public ResponseEntity<User> getUser(HttpSession session, @RequestBody User user, @RequestBody Avatar avatar) {
+        users.save(user);
+        Character character = new Character(avatar.getFilename(), 0, 0, 0, 0, user);
+        characters.save(character);
         return new ResponseEntity<User>(user, HttpStatus.OK);
     }
 
@@ -229,7 +242,7 @@ public class TOAdventureController {
         User user = users.findFirstByUsername("mike");
         //User user = users.findFirstByUsername(username);
         //Avatar avatarFromDb = avatars.findOne(avatar.getId() + 1);
-        characters.save(new Character(avatar.getFilename(), 0, 0, 0,user));
+        characters.save(new Character(avatar.getFilename(), 0, 0, 0, 0, user));
         //characters.save(new Character(avatarFromDb.getFilename(), 0, 0, user));
         return avatars.findByRace(avatar.getRace());
     }
@@ -257,5 +270,10 @@ public class TOAdventureController {
         theAvatars.add(avatar1);
         return theAvatars;
         //return characters.findByUser(user.getId());
+    }
+
+    @RequestMapping(path = "/highscore", method = RequestMethod.GET)
+    public Iterable<Character> getHighscores(HttpSession session) {
+        return characters.findAll();
     }
 }

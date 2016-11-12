@@ -24,17 +24,21 @@ public class Character {
     @Column(nullable = false)
     int money;
 
+    @Column(nullable = false)
+    int level;
+
     @ManyToOne
     User user;
 
     public Character() {
     }
 
-    public Character(String filename, int checkpoint, int score, int money, User user) {
+    public Character(String filename, int checkpoint, int score, int money, int level, User user) {
         this.filename = filename;
         this.checkpoint = checkpoint;
         this.score = score;
         this.money = money;
+        this.level = level;
         this.user = user;
     }
 
@@ -76,6 +80,14 @@ public class Character {
 
     public void setMoney(int money) {
         this.money = money;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
     }
 
     public User getUser() {
