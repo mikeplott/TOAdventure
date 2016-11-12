@@ -15,7 +15,7 @@ const ACTIONS = {
 
    handleUserLogin: function(usrName){
       // this.fetchUserData.filter(usrMdls){
-      //    if(usrMdls.get('name') === usrName){
+      //    if(usrMdls.get('username') === usrName){
       //       let selectedUser = true
       //    }
       //    return selectedUser

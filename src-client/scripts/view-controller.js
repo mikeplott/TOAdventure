@@ -13,6 +13,7 @@ const AppView = React.createClass({
    },
 
    render: function(){
+      console.log(this.state)
       switch (this.props.currentView) {
          case "home":
             return <HomeView/>
