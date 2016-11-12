@@ -1,8 +1,7 @@
 const React = require('react')
 const {HomeView, dummyUsers} = require('./home-view.js')
 const GameView = require("./game-view.js")
-
-
+const ACTIONS = require("./actions.js")
 
 const AppView = React.createClass({
 

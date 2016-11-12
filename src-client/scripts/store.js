@@ -1,14 +1,16 @@
 const Backbone = require('backbone')
 const UserCollection = require('./model-users.js')
 const CharCollection = require('./model-chars.js')
+const ACTIONS = require(
+)
 
 const STORE = {
 
    data: {
       all_users: [],
-      characters: [],
+      avatars: ACTIONS.getAllAvatars()
       currentView: "Home",
-      currentUser: "username"
+      currentUser: []
 
    },
 
