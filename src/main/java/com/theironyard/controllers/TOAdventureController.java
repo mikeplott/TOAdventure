@@ -12,10 +12,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.net.PasswordAuthentication;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -35,6 +39,12 @@ public class TOAdventureController {
 
     @Autowired
     CharacterRepo characters;
+
+    @Autowired
+    UserSpriteRepo usersprites;
+
+    @Autowired
+    UserItemRepo useritems;
 
     Server h2;
 
@@ -176,6 +186,32 @@ public class TOAdventureController {
         return new ResponseEntity<Character>(character, HttpStatus.OK);
     }
 
+    // route to save the users inventory.
+
+    @RequestMapping(path = "/inventory", method = RequestMethod.POST)
+    public Iterable<Item> saveInventory(HttpSession session, ArrayList<Item> items) throws Exception {
+        String username = (String) session.getAttribute("username");
+        if (username == null) {
+            throw new Exception("Not logged in");
+        }
+        User user = users.findFirstByUsername(username);
+        for (int i = 0; i < items.size(); i++) {
+            String file = items.get(i).getFilename();
+            useritems.save(new Item(file, user));
+        }
+        return useritems.findByUser(user);
+    }
+
+    @RequestMapping(path = "/inventory", method = RequestMethod.GET)
+    public Iterable<Item> getInventory(HttpSession session) throws Exception {
+        String username = (String) session.getAttribute("username");
+        if (username == null) {
+            throw new Exception("Not logged in");
+        }
+        User user = users.findFirstByUsername(username);
+        return useritems.findByUser(user);
+    }
+
     // route to change the level.
 
     @RequestMapping(path = "/level", method = RequestMethod.POST)
@@ -301,5 +337,74 @@ public class TOAdventureController {
     @RequestMapping(path = "/highscore", method = RequestMethod.GET)
     public Iterable<Character> getHighscores(HttpSession session) {
         return characters.findAll();
+    }
+
+    // route uploading a user submitted standing sprite.
+
+    @RequestMapping(path = "/user-sprite-standing", method = RequestMethod.POST)
+    public ResponseEntity<UserSprite> submitStandingSprite(HttpSession session, MultipartFile sprite) throws Exception {
+        String username = (String) session.getAttribute("username");
+        if (username == null) {
+            throw new Exception("Not logged in");
+        }
+        User user = users.findFirstByUsername(username);
+
+        File dir = new File("usersprites");
+        File spritefile = File.createTempFile("sprite", sprite.getOriginalFilename(), dir);
+        FileOutputStream fos = new FileOutputStream(spritefile);
+        fos.write(sprite.getBytes());
+
+        UserSprite userSprite = new UserSprite(spritefile.getName(), UserSprite.Animation.STANDING, user);
+        usersprites.save(userSprite);
+        return new ResponseEntity<UserSprite> (userSprite, HttpStatus.OK);
+    }
+
+    // route uploading a user submitted jumping sprite.
+
+    @RequestMapping(path = "/user-sprite-jumping", method = RequestMethod.POST)
+    public ResponseEntity<UserSprite> submitJumpingSprite(HttpSession session, MultipartFile sprite) throws Exception {
+        String username = (String) session.getAttribute("username");
+        if (username == null) {
+            throw new Exception("Not logged in");
+        }
+        User user = users.findFirstByUsername(username);
+
+        File dir = new File("usersprites");
+        File spritefile = File.createTempFile("sprite", sprite.getOriginalFilename(), dir);
+        FileOutputStream fos = new FileOutputStream(spritefile);
+        fos.write(sprite.getBytes());
+
+        UserSprite userSprite = new UserSprite(spritefile.getName(), UserSprite.Animation.JUMPING, user);
+        usersprites.save(userSprite);
+        return new ResponseEntity<UserSprite> (userSprite, HttpStatus.OK);
+    }
+
+    // route updating user fields returns the user object.
+
+    @RequestMapping(path = "/update-user", method = RequestMethod.POST)
+    public ResponseEntity<User> updateUser(HttpSession session, @RequestBody User user) throws PasswordStorage.CannotPerformOperationException {
+        String username = (String) session.getAttribute("username");
+        User userFromDb = users.findFirstByUsername(username);
+        userFromDb.setPassword(PasswordStorage.createHash(user.getPassword()));
+        userFromDb.setUsername(user.getUsername());
+        users.save(userFromDb);
+        return new ResponseEntity<User>(user, HttpStatus.OK);
+    }
+
+    // route to delete a user from the database and redirects to the homepage.
+
+    @RequestMapping(path = "/delete-user", method = RequestMethod.POST)
+    public void deleteUser(HttpSession session, HttpServletResponse response) throws IOException {
+        String username = (String) session.getAttribute("username");
+        User user = users.findFirstByUsername(username);
+        users.delete(user.getId());
+        response.sendRedirect("/#/");
+    }
+
+    // route logging a user out.
+
+    @RequestMapping(path = "/logout", method = RequestMethod.POST)
+    public void logout(HttpSession session) {
+        session.invalidate();
     }
 }
