@@ -38,6 +38,8 @@ const ACTIONS = {
 
 
 
+
+
    },
 // EXECUTE TO GRAB RANDOM ASSETS
    getObstacles: function(){

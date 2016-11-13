@@ -75,7 +75,7 @@ const LoginModal = React.createClass({
                <p>Username</p>
                <input ref="username" type='text'/>
                <p>Password</p>
-               <input ref="password" type='text'/>
+               <input ref="password" type='password'/>
                <input type='submit' value='Login' onClick={this._handleClick}/>
             </form>
          </div>
