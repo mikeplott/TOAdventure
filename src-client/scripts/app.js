@@ -22,7 +22,7 @@ console.log('hello')
 
    showLogin: function(){
 
-      return renderDom(<AppView currentView="login"/>)
+      ReactDOM.render(<AppView currentView="login"/>, document.querySelector("#app-container"))
    },
 
    showSignup: function(){
