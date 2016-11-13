@@ -200,9 +200,9 @@ public class TOAdventureController {
     // setting the default values and saving that to the database. returns a user object.
 
     @RequestMapping(path = "/signup", method = RequestMethod.POST)
-    public ResponseEntity<User> getUser(HttpSession session, @RequestBody User user, @RequestBody Avatar avatar) throws PasswordStorage.CannotPerformOperationException {
+    public Character getUser(HttpSession session, @RequestBody User user, @RequestBody Avatar avatar) throws PasswordStorage.CannotPerformOperationException {
         if (user == null) {
-            return new ResponseEntity<User>(HttpStatus.FORBIDDEN);
+            return null;
         }
         user.setPassword(PasswordStorage.createHash(user.getPassword()));
         users.save(user);
@@ -211,7 +211,7 @@ public class TOAdventureController {
         Character character = new Character(avatar.getFilename(), avatar2.getFilename(), 0, 0, 0, 0, user);
         characters.save(character);
         session.setAttribute("username", user.getUsername());
-        return new ResponseEntity<User>(user, HttpStatus.OK);
+        return character;
     }
 
     // route returns a user object to the client.
@@ -460,10 +460,14 @@ public class TOAdventureController {
         session.invalidate();
     }
 
+    // route to get back a boss
+
     @RequestMapping(path = "/boss", method = RequestMethod.GET)
     public Boss getBoss(HttpSession session) {
         return bosses.findOne(1);
     }
+
+    // route to get back all the assets, all the projectiles the boss will be throwing, to the client.
 
     @RequestMapping(path = "bossassets", method = RequestMethod.GET)
     public ArrayList<BossAsset> getBossAssets(HttpSession session) {
