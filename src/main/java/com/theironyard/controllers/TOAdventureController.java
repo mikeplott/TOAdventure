@@ -80,8 +80,8 @@ public class TOAdventureController {
             avatars.save(new Avatar("avatars/elf-standing.png", Avatar.Animation.STANDING, Avatar.Race.ELF));
             avatars.save(new Avatar("avatars/elf-jumping.png", Avatar.Animation.JUMPING, Avatar.Race.ELF));
             avatars.save(new Avatar("avatars/elf-death.png", Avatar.Animation.DEATH, Avatar.Race.ELF));
-            avatars.save(new Avatar("avatars/dark-elf-standing.png", Avatar.Animation.STANDING, Avatar.Race.DARKELF));
-            avatars.save(new Avatar("avatars/dark-elf-jumping.png", Avatar.Animation.JUMPING, Avatar.Race.DARKELF));
+            avatars.save(new Avatar("avatars/dark-elf-standing.png", Avatar.Animation.STANDING, Avatar.Race.MISTERT));
+            avatars.save(new Avatar("avatars/dark-elf-jumping.png", Avatar.Animation.JUMPING, Avatar.Race.MISTERT));
             avatars.save(new Avatar("avatars/orc-standing.png", Avatar.Animation.STANDING, Avatar.Race.ORC));
             avatars.save(new Avatar("avatars/orc-jumping.png", Avatar.Animation.JUMPING, Avatar.Race.ORC));
             avatars.save(new Avatar("avatars/skeleton-standing.png", Avatar.Animation.STANDING, Avatar.Race.SKELETON));
@@ -216,12 +216,12 @@ public class TOAdventureController {
 
     @RequestMapping(path = "/inventory", method = RequestMethod.GET)
     public Iterable<Item> getInventory(HttpSession session) throws Exception {
-        //String username = (String) session.getAttribute("username");
-        //if (username == null) {
-        //    throw new Exception("Not logged in");
-        //}
-        //User user = users.findFirstByUsername(username);
-        User user = users.findFirstByUsername("mike");
+        String username = (String) session.getAttribute("username");
+        if (username == null) {
+            throw new Exception("Not logged in");
+        }
+        User user = users.findFirstByUsername(username);
+        //User user = users.findFirstByUsername("mike");
         return useritems.findByUser(user);
     }
 
@@ -243,10 +243,10 @@ public class TOAdventureController {
 
     @RequestMapping(path = "/avatars", method = RequestMethod.GET)
     public Iterable<Avatar> getAvatars(HttpSession session) throws Exception {
-        //String username = (String) session.getAttribute("username");
-        //if (username == null) {
-          //  throw new Exception("Not logged in!");
-       // }
+        String username = (String) session.getAttribute("username");
+        if (username == null) {
+            throw new Exception("Not logged in!");
+        }
         return avatars.findByAnimation(Avatar.Animation.STANDING);
     }
 
@@ -305,12 +305,12 @@ public class TOAdventureController {
 
     @RequestMapping(path = "/user-avatar", method = RequestMethod.POST)
     public Iterable<Avatar> postUserAvatar(HttpSession session, @RequestBody Avatar avatar) throws Exception {
-//        String username = (String) session.getAttribute("username");
-//        if (username == null) {
-//            throw new Exception("Not logged in!");
-//        }
-        User user = users.findFirstByUsername("mike");
-        //User user = users.findFirstByUsername(username);
+        String username = (String) session.getAttribute("username");
+        if (username == null) {
+            throw new Exception("Not logged in!");
+        }
+        //User user = users.findFirstByUsername("mike");
+        User user = users.findFirstByUsername(username);
         //Avatar avatarFromDb = avatars.findOne(avatar.getId() + 1);
         characters.save(new Character(avatar.getFilename(), 0, 0, 0, 0, user));
         //characters.save(new Character(avatarFromDb.getFilename(), 0, 0, user));

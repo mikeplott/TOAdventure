@@ -17,7 +17,7 @@ public class Avatar {
     public enum Race {
         HUMAN,
         ELF,
-        DARKELF,
+        MISTERT,
         ORC,
         SKELETON;
     }
