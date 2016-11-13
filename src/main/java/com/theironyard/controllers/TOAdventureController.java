@@ -46,8 +46,11 @@ public class TOAdventureController {
     @Autowired
     UserItemRepo useritems;
 
-    @Autowired
-    BossRepo bosses;
+//    @Autowired
+//    BossRepo bosses;
+//
+//    @Autowired
+//    BossAssetRepo bossassets;
 
     Server h2;
 
@@ -122,6 +125,15 @@ public class TOAdventureController {
             npcs.save(new NPC("items/trident.png", NPC.Category.ITEM));
             npcs.save(new NPC("health/health.png", NPC.Category.HEALTH));
         }
+
+//        if (bosses.count() == 0) {
+//            bosses.save(new Boss("bosses/mage-standing.png"));
+//        }
+
+//        if (bossassets.count() == 0) {
+//            Boss boss = bosses.findOne(1);
+//            bossassets.save(new BossAsset("bossassets/mage-bullet.png", boss));
+//        }
 
         if (useritems.count() == 0) {
             User user = users.findFirstByUsername("mike");
@@ -324,10 +336,10 @@ public class TOAdventureController {
 
     @RequestMapping(path = "/user-avatar", method = RequestMethod.GET)
     public ArrayList<Avatar> getUserAvatar(HttpSession session) throws Exception {
-        String username = (String) session.getAttribute("username");
-        if (username == null) {
-            throw new Exception("Not logged in");
-        }
+//        String username = (String) session.getAttribute("username");
+//        if (username == null) {
+//            throw new Exception("Not logged in");
+//        }
         //User user = users.findFirstByUsername(username);
         ArrayList<Avatar> theAvatars = new ArrayList<>();
         //User user = users.findFirstByUsername(username);
