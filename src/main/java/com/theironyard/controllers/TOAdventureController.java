@@ -119,6 +119,13 @@ public class TOAdventureController {
             npcs.save(new NPC("items/trident.png", NPC.Category.ITEM));
             npcs.save(new NPC("health/health.png", NPC.Category.HEALTH));
         }
+
+        if (useritems.count() == 0) {
+            User user = users.findFirstByUsername("mike");
+            useritems.save(new Item("items/axe.png", user));
+            useritems.save(new Item("items/hammer.png", user));
+            useritems.save(new Item("items/stonespear.png", user));
+        }
     }
 
     @PreDestroy
@@ -204,11 +211,12 @@ public class TOAdventureController {
 
     @RequestMapping(path = "/inventory", method = RequestMethod.GET)
     public Iterable<Item> getInventory(HttpSession session) throws Exception {
-        String username = (String) session.getAttribute("username");
-        if (username == null) {
-            throw new Exception("Not logged in");
-        }
-        User user = users.findFirstByUsername(username);
+        //String username = (String) session.getAttribute("username");
+        //if (username == null) {
+        //    throw new Exception("Not logged in");
+        //}
+        //User user = users.findFirstByUsername(username);
+        User user = users.findFirstByUsername("mike");
         return useritems.findByUser(user);
     }
 
@@ -245,7 +253,7 @@ public class TOAdventureController {
         User user = users.findFirstByUsername("mike");
         Character character = characters.findByUser(user);
         ArrayList<NPC> theNpcs = new ArrayList<>();
-        for (int i = 0; i < 20 + character.getCheckpoint(); i++) {
+        for (int i = 0; i < 60 + character.getCheckpoint(); i++) {
             double randNum =  Math.random();
             if (randNum <= .70) {
                 int randId = (int) (Math.random() * (16 - 1)) + 1;
