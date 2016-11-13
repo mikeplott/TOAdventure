@@ -7,6 +7,7 @@ const STORE = {
       all_users: [],
       avatars: [],
       currentView: "Home",
+      selectedAvatar: '',
       currentUser: []
 
    },
