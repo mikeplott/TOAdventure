@@ -140,8 +140,9 @@ public class TOAdventureController {
     public ResponseEntity<User> postUser(HttpSession session, @RequestBody User user) throws PasswordStorage.CannotPerformOperationException, PasswordStorage.InvalidHashException {
         User userFromDb = users.findFirstByUsername(user.getUsername());
         if (userFromDb == null) {
-            user.setPassword(PasswordStorage.createHash(user.getPassword()));
-            users.save(user);
+            return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
+            //user.setPassword(PasswordStorage.createHash(user.getPassword()));
+            //users.save(user);
         }
         else if (!PasswordStorage.verifyPassword(user.getPassword(), userFromDb.getPassword())) {
             return new ResponseEntity<User>(HttpStatus.FORBIDDEN);
@@ -163,10 +164,14 @@ public class TOAdventureController {
 
     @RequestMapping(path = "/signup", method = RequestMethod.POST)
     public ResponseEntity<User> getUser(HttpSession session, @RequestBody User user, @RequestBody Avatar avatar) throws PasswordStorage.CannotPerformOperationException {
+        if (user == null) {
+            return new ResponseEntity<User>(HttpStatus.FORBIDDEN);
+        }
         user.setPassword(PasswordStorage.createHash(user.getPassword()));
         users.save(user);
         Character character = new Character(avatar.getFilename(), 0, 0, 0, 0, user);
         characters.save(character);
+        session.setAttribute("username", user.getUsername());
         return new ResponseEntity<User>(user, HttpStatus.OK);
     }
 
@@ -274,8 +279,6 @@ public class TOAdventureController {
         }
         return theNpcs;
     }
-
-
 
     // route returning a random NPC asset, "NPC asset defined as an enemy, money, items and health" to the client.
 
