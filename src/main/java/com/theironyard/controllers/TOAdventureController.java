@@ -152,21 +152,21 @@ public class TOAdventureController {
         h2.stop();
     }
 
-    @RequestMapping(path = "/login", method = RequestMethod.POST)
-    public ResponseEntity<Character> postUser(HttpSession session, @RequestBody User user) throws PasswordStorage.CannotPerformOperationException, PasswordStorage.InvalidHashException {
+    @RequestMapping(path = "/login", method = RequestMethod.GET)
+    public Character postUser(HttpSession session, @RequestBody User user) throws Exception {
         User userFromDb = users.findFirstByUsername(user.getUsername());
         if (userFromDb == null) {
-            return new ResponseEntity<Character>(HttpStatus.NOT_FOUND);
+            throw new Exception("User not found.");
+            //return new ResponseEntity<Character>(HttpStatus.NOT_FOUND);
             //user.setPassword(PasswordStorage.createHash(user.getPassword()));
             //users.save(user);
         }
         else if (!PasswordStorage.verifyPassword(user.getPassword(), userFromDb.getPassword())) {
-            return new ResponseEntity<Character>(HttpStatus.FORBIDDEN);
+            throw new Exception("Invalid password!");
         }
 
         session.setAttribute("username", user.getUsername());
-        Character character = characters.findByUser(user);
-        return new ResponseEntity<Character>(character, HttpStatus.OK);
+        return characters.findByUser(user);
     }
 
 
