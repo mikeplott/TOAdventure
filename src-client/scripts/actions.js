@@ -7,7 +7,7 @@ const STORE = require("./store.js")
 const ACTIONS = {
 
    fetchUserData: function(){
-      let userCollInst = new UserCollection()
+      let userCollInst = new UserModel()
       return userCollInst.fetch().then(function(){
          STORE.setStore('all_users', userCollInst)
       })
@@ -17,13 +17,17 @@ const ACTIONS = {
    getAllAvatars: function(){
       let avtrs = new AvatarCollection()
 
-      return avtrs.fetch().then(function(){
-         avtrs.models
+       avtrs.fetch().then(function(){
+         STORE.setStore('avatars', avtrs.models)
+
 
       })
    },
 
-   handleUserLogin: function(usrName){
+   handleUserLogin: function(usrInfo){
+      let usrLogin = new UserModel()
+
+
 
    },
 // EXECUTE TO GRAB RANDOM ASSETS

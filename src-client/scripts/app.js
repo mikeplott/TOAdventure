@@ -27,7 +27,7 @@ console.log('hello')
 
    showSignup: function(){
 
-      // return renderDom(<AppView currentView="signup"/>)
+      ReactDOM.render(<AppView currentView="signup"/>, document.querySelector("#app-container"))
    },
 
    showGame: function(){
