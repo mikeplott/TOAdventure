@@ -3,12 +3,24 @@ const {HomeView, dummyUsers} = require('./home-view.js')
 const GameView = require("./game-view.js")
 const ACTIONS = require("./actions.js")
 const ModalView = require('./modal-view.js')
+const STORE = require('./store.js')
 const AppView = React.createClass({
 
-   setInitialState: function(){
+   getInitialState: function(){
 
 
       return STORE.getStoreData()
+   },
+
+   componentWillMount: function(){
+      let self = this
+
+      STORE.onChange(function(){
+
+
+         self.setState(STORE.getStoreData())
+         console.log('app state changed')
+      })
    },
 
    render: function(){
@@ -20,7 +32,7 @@ const AppView = React.createClass({
             return <ModalView crntView="login"/>
             break;
          case "signup":
-            return <ModalView crntView="signup"/>
+            return <ModalView crntView="signup" avatarData ={this.state.avatars}/>
          case "game":
             return <GameView/>
          default:

@@ -19,5 +19,4 @@ const AvatarCollection = Backbone.Collection.extend({
 })
 
 
-
 module.exports = {AvatarModel, AvatarCollection}
