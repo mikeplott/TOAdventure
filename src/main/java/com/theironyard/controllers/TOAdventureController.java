@@ -152,7 +152,7 @@ public class TOAdventureController {
         h2.stop();
     }
 
-    @RequestMapping(path = "/login", method = RequestMethod.GET)
+    @RequestMapping(path = "/login", method = RequestMethod.POST)
     public Character postUser(HttpSession session, @RequestBody User user) throws Exception {
         User userFromDb = users.findFirstByUsername(user.getUsername());
         if (userFromDb == null) {
@@ -166,7 +166,7 @@ public class TOAdventureController {
         }
 
         session.setAttribute("username", user.getUsername());
-        return characters.findByUser(user);
+        return characters.findByUser(userFromDb);
     }
 
 
