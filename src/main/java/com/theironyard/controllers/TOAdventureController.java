@@ -152,24 +152,42 @@ public class TOAdventureController {
         h2.stop();
     }
 
-
-    // route allowing users to login to the site and returns a user object to the client.
-
     @RequestMapping(path = "/login", method = RequestMethod.POST)
-    public ResponseEntity<User> postUser(HttpSession session, @RequestBody User user) throws PasswordStorage.CannotPerformOperationException, PasswordStorage.InvalidHashException {
+    public ResponseEntity<Character> postUser(HttpSession session, @RequestBody User user) throws PasswordStorage.CannotPerformOperationException, PasswordStorage.InvalidHashException {
         User userFromDb = users.findFirstByUsername(user.getUsername());
         if (userFromDb == null) {
-            return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<Character>(HttpStatus.NOT_FOUND);
             //user.setPassword(PasswordStorage.createHash(user.getPassword()));
             //users.save(user);
         }
         else if (!PasswordStorage.verifyPassword(user.getPassword(), userFromDb.getPassword())) {
-            return new ResponseEntity<User>(HttpStatus.FORBIDDEN);
+            return new ResponseEntity<Character>(HttpStatus.FORBIDDEN);
         }
 
         session.setAttribute("username", user.getUsername());
-        return new ResponseEntity<User>(user, HttpStatus.OK);
+        Character character = characters.findByUser(user);
+        return new ResponseEntity<Character>(character, HttpStatus.OK);
     }
+
+
+
+    // route allowing users to login to the site and returns a user object to the client.
+
+//    @RequestMapping(path = "/login", method = RequestMethod.POST)
+//    public ResponseEntity<User> postUser(HttpSession session, @RequestBody User user) throws PasswordStorage.CannotPerformOperationException, PasswordStorage.InvalidHashException {
+//        User userFromDb = users.findFirstByUsername(user.getUsername());
+//        if (userFromDb == null) {
+//            return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
+//            //user.setPassword(PasswordStorage.createHash(user.getPassword()));
+//            //users.save(user);
+//        }
+//        else if (!PasswordStorage.verifyPassword(user.getPassword(), userFromDb.getPassword())) {
+//            return new ResponseEntity<User>(HttpStatus.FORBIDDEN);
+//        }
+//
+//        session.setAttribute("username", user.getUsername());
+//        return new ResponseEntity<User>(user, HttpStatus.OK);
+//    }
 
     // route gets avatars that the user can then choose from, this avatar object is expected back in the post route.
 
