@@ -5,25 +5,43 @@ const Backbone = require('backbone')
 
 const ModalView = React.createClass({
    getInitialState: function(){
-      return {crntModalState: 'login'}
+      return {crntModalState: ''}
    },
 
    render: function(){
 
+      if(this.props.crntView === ''){
 
+         return (
+            <div>
 
+            </div>
+         )
+      }else if(this.props.crntView === "login"){
          return (
             <div>
                <nav>
                   <span>X</span>
                </nav>
                <div>
-                  <LoginModal crntDisplay={this.state.crntModalState}/>
-                  <CharPickModal/>
+                  <LoginModal/>
                </div>
             </div>
 
-      )
+         )
+      }
+      else{
+         return (
+            <div>
+               <nav>
+                  <span>X</span>
+               </nav>
+               <div>
+                  <CharPickModal/>
+               </div>
+            </div>
+         )
+      }
    }
 
 })
@@ -31,10 +49,15 @@ const ModalView = React.createClass({
 const LoginModal = React.createClass({
 
 
-   _handleClick: function(){
+   _handleClick: function(evt){
+      evt.preventDefault()
+      console.log(this.refs.username.value)
+      console.log(this.refs.password.value)
+      console.log(evt)
 
-      this.setState({view: signup})
    },
+
+
 
    render: function(){
 
@@ -43,10 +66,11 @@ const LoginModal = React.createClass({
          <div>
             <h3>Adventurer Info..</h3>
             <form>
-               <input type='text'/>
-               <input type='text'/>
-               <input type='submit' value='Login'/>
-               <input type='submit' value='Sign-up'/>
+               <p>Username</p>
+               <input ref="username" type='text'/>
+               <p>Password</p>
+               <input ref="password" type='text'/>
+               <input type='submit' value='Login' onClick={this._handleClick}/>
             </form>
          </div>
       )

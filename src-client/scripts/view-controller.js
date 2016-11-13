@@ -2,7 +2,7 @@ const React = require('react')
 const {HomeView, dummyUsers} = require('./home-view.js')
 const GameView = require("./game-view.js")
 const ACTIONS = require("./actions.js")
-
+const ModalView = require('./modal-view.js')
 const AppView = React.createClass({
 
    setInitialState: function(){
@@ -17,10 +17,10 @@ const AppView = React.createClass({
             return <HomeView/>
             break;
          case "login":
-            return <LoginView/>
+            return <ModalView crntView="login"/>
             break;
          case "signup":
-            return <SignUpView/>
+            return <ModalView crntView="signup"/>
          case "game":
             return <GameView/>
          default:

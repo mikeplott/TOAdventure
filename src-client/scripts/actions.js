@@ -1,6 +1,5 @@
 const Backbone = require('backbone')
 const {UserModel, UserCollection} = require('./model-users.js')
-const {CharModel, CharCollection} = require('./model-chars.js')
 const {ObstacleModel, ObstacleCollection} = require('./model-assets.js')
 const {AvatarModel, AvatarCollection} = require("./model-avatars.js")
 const STORE = require("./store.js")

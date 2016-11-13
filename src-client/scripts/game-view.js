@@ -3,8 +3,6 @@ const ReactDOM = require('react-dom')
 const Backbone = require('backbone')
 const ModalView = require('./modal-view.js')
 const {HomeView, dummyUsers, NavView} = require("./home-view.js")
-const {CharModel, CharCollection} = require('./model-chars.js')
-const {AvatarModel, AvatarCollection} = require('./model-assets')
 
 let leaderBoardData = dummyUsers.map((someData, i)=>{
    return (
@@ -30,27 +28,29 @@ const GameView = React.createClass({
       return(
          <div>
             <NavView/>
-            <div>
-               <div>
-                  <h2>LeaderBoard</h2>
-                  <ol>
-                     {leaderBoardData}
-                  </ol>
-               </div>
-               <div>
+            <div className="container">
+               <div className="row">
+                  <div className="col-xs-4 leader-board">
+                     <h2>LeaderBoard</h2>
+                     <ol>
+                        {leaderBoardData}
+                     </ol>
+                  </div>
                   <div>
-                     <GameCanvas/>
+                     <div className="col-xs-8">
+                        <GameCanvas/>
+                     </div>
                   </div>
                </div>
+               <footer>
+                  <div>
+                     <p>sources and contributions</p>
+                  </div>
+                  <div>
+                     <p>github profiles</p>
+                  </div>
+               </footer>
             </div>
-            <footer>
-               <div>
-                  <p>sources and contributions</p>
-               </div>
-               <div>
-                  <p>github profiles</p>
-               </div>
-            </footer>
          </div>
 
             )
@@ -64,211 +64,304 @@ const GameView = React.createClass({
 
       componentDidMount: function(){
          const canvas = this.refs.gameCanvas
-         var game = canvas.getContext("2d");
-var x = 0;
-var y = 0;
-var xspeed = 0;
-var yspeed = 0;
-var gravity = 1;
-var height = 50;
-var ground = canvas.height - height;
-var jumpCount = 0;
-var level = 1;
-var itemCount = 15;
-var gameState = true;
-var startTime = Date.now() + 3000;
+         let game = canvas.getContext("2d");
+         let x = 0;
+         let y = 0;
+         let xspeed = 0;
+         let yspeed = 0;
+         let gravity = 1;
+         let height = 50;
+         let ground = canvas.height - height;
+         let jumpCount = 0;
+         let level = 0;
+         let itemCount = 15;
+         let gameState = true;
+         let startTime = Date.now() + 3000;
+         let score = 0;
+         let health = 3;
 
 
 
-var obstacleArray = []
-var displayedObjects = []
+         let obstacleArray = []
+         let displayedObjects = []
 
 
-var background = new Image();
-background.src = "http://i.imgur.com/CpX4uAU.jpg";
-background.onload = function(){
-    game.drawImage(background,0,0,400,150);
-}
+         let background = new Image();
+         background.src = "http://i.imgur.com/CpX4uAU.jpg";
+         background.onload = function(){
+             game.drawImage(background,0,0,400,150);
+         }
 
-var playerRight = new Image();
-playerRight.src = "https://raw.githubusercontent.com/mikeplott/TOAdventure/master/public/avatars/elf-standing.png";
-var imageRatio = 1;
-playerRight.onload = function() {
-  imageRatio = playerRight.width / playerRight.height;
-}
-var playerLeft = new Image();
-playerLeft.src = "https://raw.githubusercontent.com/mikeplott/TOAdventure/master/public/avatars/elf-standing.png";
+         let gameEnd = new Image();
+         gameEnd.src = "https://wallpapers.wallhaven.cc/wallpapers/full/wallhaven-323086.png"
 
-var playerJump = new Image();
-playerJump.src = "https://raw.githubusercontent.com/mikeplott/TOAdventure/master/public/avatars/elf-jumping.png";
-var playerImage = playerRight;
+         let playerRight = new Image();
+         playerRight.src = "https://raw.githubusercontent.com/mikeplott/TOAdventure/master/public/avatars/elf-standing.png";
+         let imageRatio = 1;
+         playerRight.onload = function() {
+           imageRatio = playerRight.width / playerRight.height;
+         }
+         let playerLeft = new Image();
+         playerLeft.src = "https://raw.githubusercontent.com/mikeplott/TOAdventure/master/public/avatars/elf-standing.png";
 
-function draw() {
+         let playerJump = new Image();
+         playerJump.src = "https://raw.githubusercontent.com/mikeplott/TOAdventure/master/public/avatars/elf-jumping.png";
 
-   game.font = "20px Arial";
-  game.fillText("Score:", 20, 20);
+         let playerDeath = new Image();
+         playerDeath.src = "https://raw.githubusercontent.com/mikeplott/TOAdventure/master/public/avatars/elf-death.png"
 
-  game.drawImage(background,0,0,canvas.width,canvas.height);
-  x = x + xspeed;
-  y = y + yspeed;
-  yspeed = yspeed + gravity;
+         let playerImage = playerRight;
 
-  if (y > ground) {
-    y = ground;
-    yspeed = 0;
-    jumpCount = 0;
-    playerImage = playerRight
-  }
-  if (x < 0){
-    x = 0;
-  }
+         let fullHealth = new Image();
+         fullHealth.src = "https://raw.githubusercontent.com/mikeplott/TOAdventure/master/public/ui/full-heart.png"
 
 
-  if (x > canvas.width - 30){
-    x = canvas.width - 30;
-  }
+         let emptyHealth = new Image();
+         emptyHealth.src = "https://raw.githubusercontent.com/mikeplott/TOAdventure/master/public/ui/empty-heart.png"
+
+         function draw() {
 
 
+           game.drawImage(background,0,0,canvas.width,canvas.height);
+           game.font = "10px Arial";
+           game.fillStyle = 'white';
+           game.fillText("Level: " + level, 10, 10);
+           game.fillText("Score: " + score, 10, 20);
+           x = x + xspeed;
+           y = y + yspeed;
+           yspeed = yspeed + gravity;
+
+           if (y > ground) {
+             y = ground;
+             yspeed = 0;
+             jumpCount = 0;
+             playerImage = playerRight
+           }
+           if (x < 0){
+             x = 0;
+           }
 
 
-  if (obstacleArray.length === 0){
+           if (x > canvas.width - 30){
+             x = canvas.width - 30;
+           }
 
-    itemCount = itemCount + (5 * level)
-    for (var i = 0; i < itemCount ; i++){
-      var theY = (Math.floor(Math.random() * 115) + 25)
-      console.log(theY)
-      obstacleArray.push({
-        name: 'item',
-        x: 900,
-        y: theY
-      })
-    }
-  }
-
-
-  displayedObjects.forEach(function(item) {
-    item.draw();
-  });
-  displayedObjects.forEach(function(item) {
-    item.update();
-  });
-  displayedObjects = displayedObjects.filter(function(item) {
-    return item.active;
-  });
+          if(health === 3){
+            game.drawImage(fullHealth, 250, 2, 15, 15)
+            game.drawImage(fullHealth, 265, 2, 15, 15)
+            game.drawImage(fullHealth, 280, 2, 15, 15)
+          } else if (health === 2){
+            game.drawImage(fullHealth, 250, 2, 15, 15)
+            game.drawImage(fullHealth, 265, 2, 15, 15)
+            game.drawImage(emptyHealth, 280, 2, 15, 15)
+          } else if (health === 1){
+            game.drawImage(fullHealth, 250, 2, 15, 15)
+            game.drawImage(emptyHealth, 265, 2, 15, 15)
+            game.drawImage(emptyHealth, 280, 2, 15, 15)
+          } else {
+            game.drawImage(emptyHealth, 250, 2, 15, 15)
+            game.drawImage(emptyHealth, 265, 2, 15, 15)
+            game.drawImage(emptyHealth, 280, 2, 15, 15)
 
 
-  game.drawImage(playerImage, x, y, height * imageRatio, height);
-}
-
-const gameUpdate = setInterval(draw, 20);
-
-function startMove(event) {
-  // pressed left
-  if (event.keyCode == 37) {
-    xspeed = -5;
-    playerImage = playerLeft;
-  }
-  // pressed right
-  if (event.keyCode == 39) {
-    xspeed = 5;
-    playerImage = playerRight;
-  }
-  // pressed up
-  if (event.keyCode == 38) {
-    if (jumpCount < 2){
-        yspeed = -10;
-        jumpCount += 1;
-        playerImage = playerJump;
-        }
-  }
-}
+            endGame();
+          }
 
 
 
-var obstacle = function (O) {
-   O.active = true;
 
-  O.xVelocity = 0;
-  O.yVelocity = 0;
-  O.width = 3;
-  O.height = 3;
-  O.color = "#FFF";
+           if (obstacleArray.length === 0){
 
-  O.inBounds = function() {
-    if(O.y >= 0){
-      return false
-    }
-  }
+             itemCount = itemCount + 5
+             for (let i = 0; i < itemCount ; i++){
+               let theY = (Math.floor(Math.random() * 105) + 25)
+               console.log(theY)
+               obstacleArray.push({
+                 name: 'item',
+                 x: 900,
+                 y: theY
+               })
+             }
+           }
 
-  O.draw = function() {
-    game.fillStyle = this.color;
-    game.fillRect(this.x, this.y, this.width, this.height);
-  };
+           if(score <= 0){
+             score = 0;
+           }
 
-  O.update = function() {
-    O.x += -3;
-    O.y += 0;
+           displayedObjects.forEach(function(item) {
+             item.draw();
+           });
+           displayedObjects.forEach(function(item) {
+             item.update();
+           });
+           displayedObjects = displayedObjects.filter(function(item) {
+             return item.active;
+           });
 
-
-
-    if(O.x <= 0){
-      O.active = false
-    } else {
-      O.active = O.active
-    }
-
-
-  };
-
-  return O;
-
-}
+           handleCollisions();
 
 
+           game.drawImage(playerImage, x, y, height * imageRatio, height);
+         }
 
-var objectThrowing = function(){
-  if(Date.now() > startTime){
-  var crntItem = obstacleArray[0]
+         let gameUpdate = setInterval(draw, 20);
 
+         let endGame = function(){
 
-   displayedObjects.push(obstacle({
-     speed: -10,
-     x: crntItem.x,
-     y: crntItem.y
-   }));
-  obstacleArray.splice(0,1)
-  if(obstacleArray.length === 0){
-    startTime = Date.now() + 10000
-  }
-  console.log(obstacleArray.length)
-}
+           game.drawImage(gameEnd, 5,30,300,100)
+           clearInterval(objectCycle);
+           clearInterval(gameUpdate);
+           setTimeout(function(){
+             y += -15;
+             let fallingDeath = setInterval(function(){
 
-
-}
-
-const objectCycle = setInterval(objectThrowing, 1000)
-
-var collision = function (item, me){
-
-  if(item.x < me.x + height * imageRatio &&
-     item.x + item.width > b.x &&
-     item.y < me.y + height &&
-     item.y + item.height > me.y){
-    return true
-  }
-
-}
+             playerImage = playerDeath;  game.drawImage(background,0,0,canvas.width,canvas.height);
+           game.font = "10px Arial";
+           game.fillStyle = 'white';
+           game.fillText("Level: " + level, 10, 10);
+           game.fillText("Score: " + score, 10, 20);
+             x = x;
+             y = y + yspeed;
+             yspeed = yspeed + gravity;
+             game.drawImage(playerImage, x, y, height * imageRatio, height)
+             game.drawImage(gameEnd, 5,30,300,100)
+             if(y > ground){
+               y = ground;
+               yspeed = 0;
+               clearInterval(fallingDeath)
+             }
+           },30)
 
 
-document.onkeydown = startMove;
 
-function stopMove(event) {
-  if (event.keyCode == 37 || event.keyCode == 39) {
-    xspeed = 0;
-  }
-}
+           }, 1000)
+         }
 
-document.onkeyup = stopMove;
+         function startMove(event) {
+           // pressed left
+           if (event.keyCode == 37) {
+             xspeed = -5;
+             playerImage = playerLeft;
+           }
+           // pressed right
+           if (event.keyCode == 39) {
+             xspeed = 5;
+             playerImage = playerRight;
+           }
+           // pressed up
+           if (event.keyCode == 38) {
+             if (jumpCount < 2){
+                 yspeed = -10;
+                 jumpCount += 1;
+                 playerImage = playerJump;
+                 }
+           }
+         }
+
+
+
+         let obstacle = function (O) {
+            O.active = true;
+           O.item = new Image()
+             O.item.src = "https://raw.githubusercontent.com/mikeplott/TOAdventure/master/public/npcs/enemy1.png"
+           O.xVelocity = 0;
+           O.yVelocity = 0;
+           O.width = 20;
+           O.height = 20;
+           O.color = "#FFF";
+
+           O.inBounds = function() {
+             if(O.y >= 0){
+               return false
+             }
+           }
+
+           O.draw = function() {
+             game.drawImage(this.item,this.x, this.y, this.width, this.height)
+             // game.fillStyle = this.color;
+             // game.fillRect(this.x, this.y, this.width, this.height);
+           };
+
+           O.update = function() {
+             O.x += -3;
+             O.y += 0;
+
+
+
+             if(O.x <= 0){
+               score += 1;
+               O.active = false
+             } else {
+               O.active = O.active
+             }
+
+
+           };
+
+           return O;
+
+         }
+
+
+
+         let objectThrowing = function(){
+           if(Date.now() > startTime){
+           let crntItem = obstacleArray[0]
+            if(displayedObjects.length === 0){
+             level += 1;
+           }
+
+            displayedObjects.push(obstacle({
+              speed: -10,
+              x: crntItem.x,
+              y: crntItem.y
+            }));
+           obstacleArray.splice(0,1)
+           if(obstacleArray.length === 0){
+
+             startTime = Date.now() + 10000
+           }
+           console.log(obstacleArray.length)
+         }
+
+
+         }
+
+         let objectCycle = setInterval(objectThrowing, 1000)
+
+         let collision = function (item, me){
+
+           if(item.x < x + height * imageRatio &&
+              item.x + item.width > x &&
+              item.y < y + height &&
+              item.y + item.height > y){
+             return true
+           }
+
+         }
+
+         let handleCollisions = function (){
+           displayedObjects.forEach(function(item){
+             if(collision(item)){
+               item.active = false
+               score += -5;
+               if(health > 0){
+                 health += -1;
+               }
+             }
+           })
+         }
+
+
+         document.onkeydown = startMove;
+
+         function stopMove(event) {
+           if (event.keyCode == 37 || event.keyCode == 39) {
+             xspeed = 0;
+           }
+         }
+
+         document.onkeyup = stopMove;
 
       },
 
@@ -276,7 +369,6 @@ document.onkeyup = stopMove;
 
       render: function(){
 
-         // const canvas = this.refs.gameCanvas
 
 
          return(
@@ -293,4 +385,4 @@ document.onkeyup = stopMove;
 
 
 
-            module.exports = GameView
+module.exports = GameView
