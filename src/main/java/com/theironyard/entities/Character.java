@@ -16,6 +16,9 @@ public class Character {
     String filename;
 
     @Column(nullable = false)
+    String filename2;
+
+    @Column(nullable = false)
     int checkpoint;
 
     @Column(nullable = false)
@@ -33,8 +36,9 @@ public class Character {
     public Character() {
     }
 
-    public Character(String filename, int checkpoint, int score, int money, int level, User user) {
+    public Character(String filename, String filename2, int checkpoint, int score, int money, int level, User user) {
         this.filename = filename;
+        this.filename2 = filename2;
         this.checkpoint = checkpoint;
         this.score = score;
         this.money = money;
@@ -56,6 +60,14 @@ public class Character {
 
     public void setFilename(String filename) {
         this.filename = filename;
+    }
+
+    public String getFilename2() {
+        return filename2;
+    }
+
+    public void setFilename2(String filename2) {
+        this.filename2 = filename2;
     }
 
     public int getCheckpoint() {

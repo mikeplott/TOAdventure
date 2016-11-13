@@ -46,11 +46,11 @@ public class TOAdventureController {
     @Autowired
     UserItemRepo useritems;
 
-//    @Autowired
-//    BossRepo bosses;
-//
-//    @Autowired
-//    BossAssetRepo bossassets;
+    @Autowired
+    BossRepo bosses;
+
+    @Autowired
+    BossAssetRepo bossassets;
 
     Server h2;
 
@@ -72,11 +72,11 @@ public class TOAdventureController {
             User user2 = users.findFirstByUsername("tom");
             User user3 = users.findFirstByUsername("rob");
             User user4 = users.findFirstByUsername("nick");
-            characters.save(new Character("avatars/human-standing.png", 0, 12, 0, 0, user));
-            characters.save(new Character("avatars/elf-standing.png", 0, 143, 0, 0, user1));
-            characters.save(new Character("avatars/dark-elf.png", 0, 1235, 0, 0, user2));
-            characters.save(new Character("avatars/orc-standing.png", 0, 1234123, 0, 0, user3));
-            characters.save(new Character("avatars/skeleton-standing.png", 0, 13422141, 0, 0, user4));
+            characters.save(new Character("avatars/human-standing.png", "avatars/human-jumping.png", 0, 12, 0, 0, user));
+            characters.save(new Character("avatars/elf-standing.png", "avatars/elf-jumping.png", 0, 143, 0, 0, user1));
+            characters.save(new Character("avatars/dark-elf-standing.png", "avatars/dark-elf-jumping.png", 0, 1235, 0, 0, user2));
+            characters.save(new Character("avatars/orc-standing.png", "avatars/orc-jumping.png", 0, 1234123, 0, 0, user3));
+            characters.save(new Character("avatars/skeleton-standing.png", "avatars/skeleton-jumping.png", 0, 13422141, 0, 0, user4));
         }
 
         if (avatars.count() == 0) {
@@ -126,14 +126,18 @@ public class TOAdventureController {
             npcs.save(new NPC("health/health.png", NPC.Category.HEALTH));
         }
 
-//        if (bosses.count() == 0) {
-//            bosses.save(new Boss("bosses/mage-standing.png"));
-//        }
+        if (bosses.count() == 0) {
+            bosses.save(new Boss("bosses/mage-standing.png"));
+        }
 
-//        if (bossassets.count() == 0) {
-//            Boss boss = bosses.findOne(1);
-//            bossassets.save(new BossAsset("bossassets/mage-bullet.png", boss));
-//        }
+        if (bossassets.count() == 0) {
+            Boss boss = bosses.findOne(1);
+            bossassets.save(new BossAsset("bossassets/mage-bullet1.png", boss));
+            bossassets.save(new BossAsset("bossassets/mage-bullet2.png", boss));
+            bossassets.save(new BossAsset("bossassets/mage-bullet3.png", boss));
+            bossassets.save(new BossAsset("bossassets/mage-bullet4.png", boss));
+            bossassets.save(new BossAsset("bossassets/mage-bullet5.png", boss));
+        }
 
         if (useritems.count() == 0) {
             User user = users.findFirstByUsername("mike");
@@ -184,7 +188,9 @@ public class TOAdventureController {
         }
         user.setPassword(PasswordStorage.createHash(user.getPassword()));
         users.save(user);
-        Character character = new Character(avatar.getFilename(), 0, 0, 0, 0, user);
+        Avatar avatar1 = avatars.findByFilename(avatar.getFilename());
+        Avatar avatar2 = avatars.findOne(avatar1.getId() + 1);
+        Character character = new Character(avatar.getFilename(), avatar2.getFilename(), 0, 0, 0, 0, user);
         characters.save(character);
         session.setAttribute("username", user.getUsername());
         return new ResponseEntity<User>(user, HttpStatus.OK);
@@ -327,7 +333,9 @@ public class TOAdventureController {
         User user = users.findFirstByUsername("mike");
         //User user = users.findFirstByUsername(username);
         //Avatar avatarFromDb = avatars.findOne(avatar.getId() + 1);
-        characters.save(new Character(avatar.getFilename(), 0, 0, 0, 0, user));
+        Avatar avatar1 = avatars.findByFilename(avatar.getFilename());
+        Avatar avatar2 = avatars.findOne(avatar1.getId() + 1);
+        characters.save(new Character(avatar.getFilename(), avatar2.getFilename(), 0, 0, 0, 0, user));
         //characters.save(new Character(avatarFromDb.getFilename(), 0, 0, user));
         return avatars.findByRace(avatar.getRace());
     }
@@ -432,5 +440,20 @@ public class TOAdventureController {
     @RequestMapping(path = "/logout", method = RequestMethod.POST)
     public void logout(HttpSession session) {
         session.invalidate();
+    }
+
+    @RequestMapping(path = "/boss", method = RequestMethod.GET)
+    public Boss getBoss(HttpSession session) {
+        return bosses.findOne(1);
+    }
+
+    @RequestMapping(path = "bossassets", method = RequestMethod.GET)
+    public ArrayList<BossAsset> getBossAssets(HttpSession session) {
+        ArrayList<BossAsset> bossAssets = new ArrayList<>();
+        for (int i = 0; i < 300; i++) {
+            int randId = (int) (Math.random() * (5 - 1)) + 1;
+            bossAssets.add(bossassets.findOne(randId));
+        }
+        return bossAssets;
     }
 }
