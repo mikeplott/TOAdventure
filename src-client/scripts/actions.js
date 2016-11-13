@@ -27,6 +27,15 @@ const ACTIONS = {
    handleUserLogin: function(usrInfo){
       let usrLogin = new UserModel()
 
+      usrLogin.set(usrInfo)
+      console.log(usrLogin)
+
+      usrLogin.save().then(function(serverRes){
+
+         console.log(serverRes)
+      })
+
+
 
 
    },
