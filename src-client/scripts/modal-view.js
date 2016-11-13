@@ -75,7 +75,7 @@ const LoginModal = React.createClass({
                <p>Username</p>
                <input ref="username" type='text'/>
                <p>Password</p>
-               <input ref="password" type='text'/>
+               <input ref="password" type='password'/>
                <input type='submit' value='Login' onClick={this._handleClick}/>
             </form>
          </div>
@@ -98,7 +98,7 @@ const CharPickModal = React.createClass({
       let newUser ={
          username: this.refs.username.value,
          password: this.refs.password.value,
-         filename: "hello"
+         filename: this.refs.avatar.value
 
       }
       console.log(newUser)
@@ -130,6 +130,8 @@ const CharPickModal = React.createClass({
                   <input type="text" ref="username"/>
                   <p>Password:</p>
                   <input type="password" ref="password"/>
+                  <p>Avatar Selected:</p>
+                  <input type="text" ref="avatar"/>
 
                   <input type='submit'onClick={this._onSubmit}/>
 
@@ -161,10 +163,10 @@ const AvatarEl = React.createClass({
          <div>
             <h3>{this.props.avatarName}</h3>
             <img src={this.props.fileName} alt=""/>
-            <input onClick={type="checkbox"} ref={this.props.avatarName}/>
-               </div>
+            <input type="checkbox" ref={this.props.avatarName}/>
+         </div>
 
-               )
+      )
    }
 
 

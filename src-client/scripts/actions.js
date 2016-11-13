@@ -2,6 +2,7 @@ const Backbone = require('backbone')
 const {UserModel, UserCollection} = require('./model-users.js')
 const {ObstacleModel, ObstacleCollection} = require('./model-assets.js')
 const {AvatarModel, AvatarCollection} = require("./model-avatars.js")
+const {SignUpModel, SignUpCollection} = require('./signup-models.js')
 const STORE = require("./store.js")
 
 const ACTIONS = {
@@ -38,6 +39,8 @@ const ACTIONS = {
 
 
 
+
+
    },
 // EXECUTE TO GRAB RANDOM ASSETS
    getObstacles: function(){
@@ -50,12 +53,12 @@ const ACTIONS = {
    },
 
    createNewUser: function(modlVals){
-      let newUser = new UserModel()
+      let newUser = new SignUpModel()
 
       newMod.set(modlVals)
 
       newMod.save().then(function(serverRes){
-         ACTIONS.fetchUserData()
+         console.log(serverRes)
       })
 
    },
