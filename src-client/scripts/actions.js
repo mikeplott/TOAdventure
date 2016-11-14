@@ -61,11 +61,12 @@ const ACTIONS = {
 // EXECUTE TO GRAB RANDOM ASSETS
    getObstacles: function(){
       let obst = new ObstacleCollection()
-
-      obst.fetch().then(function(){
-
-         return obst.models
-      })
+      //
+      // obst.fetch().then(function(){
+      //
+      //    STORE.setStore('obstacles', obst.models)
+      //
+      // })
    },
 
    createNewUser: function(modlVals){
@@ -74,7 +75,7 @@ const ACTIONS = {
       newUser.set(modlVals)
 
       newUser.save().then(function(serverRes){
-         STORE.setStore('currentUserData', serverRes)
+         STORE.setStore('currentUser', serverRes)
 
       })
 
