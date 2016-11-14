@@ -58,7 +58,7 @@ const ACTIONS = {
       newUser.set(modlVals)
 
       newUser.save().then(function(serverRes){
-         console.log(serverRes)
+         STORE.setStore('currentUserData', serverRes)
       })
 
    },
