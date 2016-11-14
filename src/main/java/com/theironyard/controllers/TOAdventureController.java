@@ -73,11 +73,11 @@ public class TOAdventureController {
             User user2 = users.findFirstByUsername("tom");
             User user3 = users.findFirstByUsername("rob");
             User user4 = users.findFirstByUsername("nick");
-            characters.save(new Character("avatars/human-standing.png", "avatars/human-jumping.png", 0, 12, 0, 0, user));
-            characters.save(new Character("avatars/elf-standing.png", "avatars/elf-jumping.png", 0, 143, 0, 0, user1));
-            characters.save(new Character("avatars/mister-t-standing.png", "avatars/mister-t-jumping.png", 0, 1235, 0, 0, user2));
-            characters.save(new Character("avatars/orc-standing.png", "avatars/orc-jumping.png", 0, 1234123, 0, 0, user3));
-            characters.save(new Character("avatars/skeleton-standing.png", "avatars/skeleton-jumping.png", 0, 13422141, 0, 0, user4));
+            characters.save(new Character("avatars/human-standing.png", "avatars/human-jumping.png", "avatars/human-death.png", 0, 12, 0, 0, user));
+            characters.save(new Character("avatars/elf-standing.png", "avatars/elf-jumping.png", "avatars/elf-death.png", 0, 143, 0, 0, user1));
+            characters.save(new Character("avatars/mister-t-standing.png", "avatars/mister-t-jumping.png", "avatars/mister-t-death.png", 0, 1235, 0, 0, user2));
+            characters.save(new Character("avatars/orc-standing.png", "avatars/orc-jumping.png", "avatars/orc-death.png", 0, 1234123, 0, 0, user3));
+            characters.save(new Character("avatars/skeleton-standing.png", "avatars/skeleton-jumping.png", "avatars/skeleton-death.png", 0, 13422141, 0, 0, user4));
         }
 
         if (avatars.count() == 0) {
@@ -214,7 +214,8 @@ public class TOAdventureController {
         users.save(user);
         Avatar avatar1 = avatars.findByFilename(json.get("filename"));
         Avatar avatar2 = avatars.findOne(avatar1.getId() + 1);
-        Character character = new Character(avatar1.getFilename(), avatar2.getFilename(), 0, 0, 0, 0, user);
+        Avatar avatar3 = avatars.findOne(avatar2.getId() + 1);
+        Character character = new Character(avatar1.getFilename(), avatar2.getFilename(), avatar3.getFilename(), 0, 0, 0, 0, user);
         characters.save(character);
         session.setAttribute("username", user.getUsername());
         return character;
@@ -336,25 +337,29 @@ public class TOAdventureController {
 
     // route returning an array list of NPC assets
 
-    @RequestMapping(path = "random-assets", method = RequestMethod.GET)
-    public ArrayList<NPC> getRandomAssets(HttpSession session) {
-        //String username = (String) session.getAttribute("username");
-        User user = users.findFirstByUsername("mike");
+    @RequestMapping(path = "/random-assets", method = RequestMethod.GET)
+    public ArrayList<NPC> getRandomAssets(HttpSession session) throws Exception {
+        String username = (String) session.getAttribute("username");
+        if (username == null) {
+            throw new Exception("Not logged in!");
+        }
+        User user = users.findFirstByUsername(username);
+        //User user = users.findFirstByUsername("mike");
         Character character = characters.findByUser(user);
         ArrayList<NPC> theNpcs = new ArrayList<>();
         for (int i = 0; i < 60 + character.getCheckpoint(); i++) {
             double randNum =  Math.random();
-            if (randNum <= .70) {
+            if (randNum <= .97) {
                 int randId = (int) (Math.random() * (16 - 1)) + 1;
                 // int randId = (int) Math.ceil(Math.random() * 15);
                 theNpcs.add(npcs.findOne(randId));
             }
-            else if (randNum > .70 && randNum <= .90) {
+            else if (randNum > .97 && randNum <= .98) {
                 int randId = (int) (Math.random() * (29 - 17)) + 17;
                 //int randId = (int) Math.ceil(Math.random() * 11);
                 theNpcs.add(npcs.findOne(randId));
             }
-            else if (randNum > .90 && randNum <= .95) {
+            else if (randNum > .98 && randNum <= .99) {
                 theNpcs.add(npcs.findOne(16));
             }
             else {
@@ -398,7 +403,8 @@ public class TOAdventureController {
         //Avatar avatarFromDb = avatars.findOne(avatar.getId() + 1);
         Avatar avatar1 = avatars.findByFilename(avatar.getFilename());
         Avatar avatar2 = avatars.findOne(avatar1.getId() + 1);
-        characters.save(new Character(avatar.getFilename(), avatar2.getFilename(), 0, 0, 0, 0, user));
+        Avatar avatar3 = avatars.findOne(avatar2.getId() + 2);
+        characters.save(new Character(avatar.getFilename(), avatar2.getFilename(), avatar3.getFilename(), 0, 0, 0, 0, user));
         //characters.save(new Character(avatarFromDb.getFilename(), 0, 0, user));
         return avatars.findByRace(avatar.getRace());
     }
@@ -407,14 +413,14 @@ public class TOAdventureController {
 
     @RequestMapping(path = "/user-avatar", method = RequestMethod.GET)
     public ArrayList<Avatar> getUserAvatar(HttpSession session) throws Exception {
-//        String username = (String) session.getAttribute("username");
-//        if (username == null) {
-//            throw new Exception("Not logged in");
-//        }
-        //User user = users.findFirstByUsername(username);
+        String username = (String) session.getAttribute("username");
+        if (username == null) {
+            throw new Exception("Not logged in");
+        }
+        User user = users.findFirstByUsername(username);
         ArrayList<Avatar> theAvatars = new ArrayList<>();
         //User user = users.findFirstByUsername(username);
-        User user = users.findFirstByUsername("mike");
+        //User user = users.findFirstByUsername("mike");
         //User user = users.findFirstByUsername("sam");
         //User user = users.findFirstByUsername("tom");
         //User user = users.findFirstByUsername("rob");
