@@ -22,6 +22,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Created by michaelplott on 11/10/16.
@@ -86,8 +87,8 @@ public class TOAdventureController {
             avatars.save(new Avatar("avatars/elf-standing.png", Avatar.Animation.STANDING, Avatar.Race.ELF));
             avatars.save(new Avatar("avatars/elf-jumping.png", Avatar.Animation.JUMPING, Avatar.Race.ELF));
             avatars.save(new Avatar("avatars/elf-death.png", Avatar.Animation.DEATH, Avatar.Race.ELF));
-            avatars.save(new Avatar("avatars/dark-elf-standing.png", Avatar.Animation.STANDING, Avatar.Race.MISTERT));
-            avatars.save(new Avatar("avatars/dark-elf-jumping.png", Avatar.Animation.JUMPING, Avatar.Race.MISTERT));
+            avatars.save(new Avatar("avatars/dark-elf-standing.png", Avatar.Animation.STANDING, Avatar.Race.MISTER_T));
+            avatars.save(new Avatar("avatars/dark-elf-jumping.png", Avatar.Animation.JUMPING, Avatar.Race.MISTER_T));
             avatars.save(new Avatar("avatars/orc-standing.png", Avatar.Animation.STANDING, Avatar.Race.ORC));
             avatars.save(new Avatar("avatars/orc-jumping.png", Avatar.Animation.JUMPING, Avatar.Race.ORC));
             avatars.save(new Avatar("avatars/skeleton-standing.png", Avatar.Animation.STANDING, Avatar.Race.SKELETON));
@@ -196,23 +197,39 @@ public class TOAdventureController {
         return avatars.findByAnimation(Avatar.Animation.STANDING);
     }
 
-    // route recieves a user object and hashes the password and saves it to the database as well as creating a new character object
-    // setting the default values and saving that to the database. returns a user object.
-
     @RequestMapping(path = "/signup", method = RequestMethod.POST)
-    public Character getUser(HttpSession session, @RequestBody User user, @RequestBody Avatar avatar) throws PasswordStorage.CannotPerformOperationException {
-        if (user == null) {
+    public Character getUser(HttpSession session, @RequestBody Map<String, String> json) throws PasswordStorage.CannotPerformOperationException {
+        if (json.get("username") == null) {
             return null;
         }
-        user.setPassword(PasswordStorage.createHash(user.getPassword()));
+        User user = new User(json.get("username"), PasswordStorage.createHash(json.get("password")));
+        //user.setPassword(PasswordStorage.createHash(user.getPassword()));
         users.save(user);
-        Avatar avatar1 = avatars.findByFilename(avatar.getFilename());
+        Avatar avatar1 = avatars.findByFilename(json.get("filename"));
         Avatar avatar2 = avatars.findOne(avatar1.getId() + 1);
-        Character character = new Character(avatar.getFilename(), avatar2.getFilename(), 0, 0, 0, 0, user);
+        Character character = new Character(avatar1.getFilename(), avatar2.getFilename(), 0, 0, 0, 0, user);
         characters.save(character);
         session.setAttribute("username", user.getUsername());
         return character;
     }
+
+    // route recieves a user object and hashes the password and saves it to the database as well as creating a new character object
+    // setting the default values and saving that to the database. returns a user object.
+
+//    @RequestMapping(path = "/signup", method = RequestMethod.POST)
+//    public Character getUser(HttpSession session, @RequestBody User user, @RequestBody Avatar avatar) throws PasswordStorage.CannotPerformOperationException {
+//        if (user == null) {
+//            return null;
+//        }
+//        user.setPassword(PasswordStorage.createHash(user.getPassword()));
+//        users.save(user);
+//        Avatar avatar1 = avatars.findByFilename(avatar.getFilename());
+//        Avatar avatar2 = avatars.findOne(avatar1.getId() + 1);
+//        Character character = new Character(avatar.getFilename(), avatar2.getFilename(), 0, 0, 0, 0, user);
+//        characters.save(character);
+//        session.setAttribute("username", user.getUsername());
+//        return character;
+//    }
 
     // route returns a user object to the client.
 
