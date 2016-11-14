@@ -243,19 +243,40 @@ public class TOAdventureController {
         return users.findFirstByUsername(username);
     }
 
-    // route saving checkpoints, still determining the functionality of this route.
+    // route expecting a map of key value pairs, keys expected are as follows. "id", "score". I pull the character from the DB
+    // using the id field of the character. then I set the score of that character object from the DB to the value of score from
+    // the front end. Then the object is saved to the database and returned to the client.
 
     @RequestMapping(path = "/checkpoint", method = RequestMethod.POST)
-    public ResponseEntity<Character> setCheckpoint(HttpSession session, @RequestBody Character character) {
+    public ResponseEntity<Character> setCheckpoint(HttpSession session, @RequestBody Map<String, Integer> json) {
         String username = (String) session.getAttribute("username");
         if (username == null) {
             return new ResponseEntity<Character>(HttpStatus.FORBIDDEN);
         }
-        Character characterFromDb = characters.findOne(character.getId());
-        characterFromDb.setMoney(character.getMoney());
-        characterFromDb.setScore(character.getScore());
+        Character characterFromDb = characters.findOne(json.get("id"));
+        characterFromDb.setScore(json.get("score"));
         characters.save(characterFromDb);
-        return new ResponseEntity<Character>(character, HttpStatus.OK);
+        return new ResponseEntity<Character>(characterFromDb, HttpStatus.OK);
+
+    // route saving checkpoints, still determining the functionality of this route.
+
+//    @RequestMapping(path = "/checkpoint", method = RequestMethod.POST)
+//    public ResponseEntity<Character> setCheckpoint(HttpSession session, @RequestBody Character character) {
+//        String username = (String) session.getAttribute("username");
+//        if (username == null) {
+//            return new ResponseEntity<Character>(HttpStatus.FORBIDDEN);
+//        }
+//        Character characterFromDb = characters.findOne(character.getId());
+//        characterFromDb.setMoney(character.getMoney());
+//        characterFromDb.setScore(character.getScore());
+//        characters.save(characterFromDb);
+//        return new ResponseEntity<Character>(character, HttpStatus.OK);
+
+        /*
+            money: 590439853
+            score: 2309844903
+
+         */
     }
 
     // route to save the users inventory.
