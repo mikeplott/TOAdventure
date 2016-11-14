@@ -60,7 +60,7 @@ const LoginModal = React.createClass({
          password: this.refs.password.value
       }
       ACTIONS.handleUserLogin(userLogin)
-
+      location.hash=""
    },
 
 
