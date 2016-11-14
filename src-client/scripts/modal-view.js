@@ -96,12 +96,17 @@ const CharPickModal = React.createClass({
       evt.preventDefault()
 
       let newUser ={
+         filename: this.refs.avatar.value,
          username: this.refs.username.value,
-         password: this.refs.password.value,
-         filename: this.refs.avatar.value
+         password: this.refs.password.value
+
+
 
       }
-      console.log(newUser)
+      ACTIONS.createNewUser(newUser)
+
+      location.hash=""
+
 
 
 
