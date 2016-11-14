@@ -2,7 +2,11 @@ const Backbone = require('backbone')
 const {UserModel, UserCollection} = require('./model-users.js')
 const {ObstacleModel, ObstacleCollection} = require('./model-assets.js')
 const {AvatarModel, AvatarCollection} = require("./model-avatars.js")
+<<<<<<< HEAD
 const {HighScoreModel, HighScoreCollection} = require('./highscore-models.js')
+=======
+const {SignUpModel, SignUpCollection} = require('./signup-models.js')
+>>>>>>> 560f0b8b340234bb643573c375f6346fc1c47921
 const STORE = require("./store.js")
 
 const ACTIONS = {
@@ -38,6 +42,17 @@ const ACTIONS = {
    handleUserLogin: function(usrInfo){
       let usrLogin = new UserModel()
 
+      usrLogin.set(usrInfo)
+      console.log(usrLogin)
+
+      usrLogin.save().then(function(serverRes){
+
+         console.log(serverRes)
+      })
+
+
+
+
 
 
    },
@@ -52,12 +67,12 @@ const ACTIONS = {
    },
 
    createNewUser: function(modlVals){
-      let newUser = new UserModel()
+      let newUser = new SignUpModel()
 
-      newMod.set(modlVals)
+      newUser.set(modlVals)
 
-      newMod.save().then(function(serverRes){
-         ACTIONS.fetchUserData()
+      newUser.save().then(function(serverRes){
+         STORE.setStore('currentUserData', serverRes)
       })
 
    },

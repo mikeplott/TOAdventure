@@ -55,17 +55,11 @@ const LoginModal = React.createClass({
    _handleClick: function(evt){
       evt.preventDefault()
 
-      userLogin ={
+      let userLogin ={
          username: this.refs.username.value,
          password: this.refs.password.value
       }
-      let sendUser = new UserModel()
-
-      sendUser.set(userLogin)
-
-      sendUser.save().then(function(serverRes){
-         console.log(serverRes)
-      })
+      ACTIONS.handleUserLogin(userLogin)
 
    },
 
@@ -81,7 +75,7 @@ const LoginModal = React.createClass({
                <p>Username</p>
                <input ref="username" type='text'/>
                <p>Password</p>
-               <input ref="password" type='text'/>
+               <input ref="password" type='password'/>
                <input type='submit' value='Login' onClick={this._handleClick}/>
             </form>
          </div>
@@ -98,8 +92,28 @@ const CharPickModal = React.createClass({
 
       ACTIONS.getAllAvatars()
    },
+   _onSubmit: function(evt){
+      evt.preventDefault()
+
+      let newUser ={
+         filename: this.refs.avatar.value,
+         username: this.refs.username.value,
+         password: this.refs.password.value
+
+      }
+      ACTIONS.createNewUser(newUser)
+
+      location.hash=""
+
+
+
+
+   },
 
    render: function(){
+
+
+
 
 
       return (
@@ -115,10 +129,14 @@ const CharPickModal = React.createClass({
 
 
                <form action="">
+                  <p>Username:</p>
                   <input type="text" ref="username"/>
-                  <input type="text" ref="password"/>
+                  <p>Password:</p>
+                  <input type="password" ref="password"/>
+                  <p>Avatar Selected:</p>
+                  <input type="text" ref="avatar"/>
 
-                  <input type='submit'/>
+                  <input type='submit'onClick={this._onSubmit}/>
 
                </form>
 
@@ -134,16 +152,24 @@ const CharPickModal = React.createClass({
 
 
 const AvatarEl = React.createClass({
+   _selectedChar: function(){
 
+
+
+   },
 
    render: function(){
+
 
       return (
          <div>
             <h3>{this.props.avatarName}</h3>
-            <img src={this.props.fileName} alt=""/>
-            <input type="checkbox" ref={this.props.avatarName}/>
+            <a className="avatars" onClick={this._selectedChar} href={"#signup/" + this.props.fileName}>
+               <img src={this.props.fileName} alt=""/>
+            </a>
          </div>
+
+
 
       )
    }

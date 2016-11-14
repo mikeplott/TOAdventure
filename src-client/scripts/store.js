@@ -7,8 +7,13 @@ const STORE = {
       all_users: [],
       avatars: [],
       currentView: "Home",
+<<<<<<< HEAD
       currentUser: [],
       highscore: []
+=======
+      selectedAvatar: '',
+      currentUser: []
+>>>>>>> 560f0b8b340234bb643573c375f6346fc1c47921
 
    },
 

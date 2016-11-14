@@ -22,6 +22,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Created by michaelplott on 11/10/16.
@@ -49,6 +50,9 @@ public class TOAdventureController {
     @Autowired
     BossRepo bosses;
 
+    @Autowired
+    BossAssetRepo bossassets;
+
     Server h2;
 
     @PostConstruct
@@ -69,11 +73,11 @@ public class TOAdventureController {
             User user2 = users.findFirstByUsername("tom");
             User user3 = users.findFirstByUsername("rob");
             User user4 = users.findFirstByUsername("nick");
-            characters.save(new Character("avatars/human-standing.png", 0, 12, 0, 0, user));
-            characters.save(new Character("avatars/elf-standing.png", 0, 143, 0, 0, user1));
-            characters.save(new Character("avatars/dark-elf.png", 0, 1235, 0, 0, user2));
-            characters.save(new Character("avatars/orc-standing.png", 0, 1234123, 0, 0, user3));
-            characters.save(new Character("avatars/skeleton-standing.png", 0, 13422141, 0, 0, user4));
+            characters.save(new Character("avatars/human-standing.png", "avatars/human-jumping.png", 0, 12, 0, 0, user));
+            characters.save(new Character("avatars/elf-standing.png", "avatars/elf-jumping.png", 0, 143, 0, 0, user1));
+            characters.save(new Character("avatars/dark-elf-standing.png", "avatars/dark-elf-jumping.png", 0, 1235, 0, 0, user2));
+            characters.save(new Character("avatars/orc-standing.png", "avatars/orc-jumping.png", 0, 1234123, 0, 0, user3));
+            characters.save(new Character("avatars/skeleton-standing.png", "avatars/skeleton-jumping.png", 0, 13422141, 0, 0, user4));
         }
 
         if (avatars.count() == 0) {
@@ -83,8 +87,8 @@ public class TOAdventureController {
             avatars.save(new Avatar("avatars/elf-standing.png", Avatar.Animation.STANDING, Avatar.Race.ELF));
             avatars.save(new Avatar("avatars/elf-jumping.png", Avatar.Animation.JUMPING, Avatar.Race.ELF));
             avatars.save(new Avatar("avatars/elf-death.png", Avatar.Animation.DEATH, Avatar.Race.ELF));
-            avatars.save(new Avatar("avatars/dark-elf-standing.png", Avatar.Animation.STANDING, Avatar.Race.MISTERT));
-            avatars.save(new Avatar("avatars/dark-elf-jumping.png", Avatar.Animation.JUMPING, Avatar.Race.MISTERT));
+            avatars.save(new Avatar("avatars/dark-elf-standing.png", Avatar.Animation.STANDING, Avatar.Race.MISTER_T));
+            avatars.save(new Avatar("avatars/dark-elf-jumping.png", Avatar.Animation.JUMPING, Avatar.Race.MISTER_T));
             avatars.save(new Avatar("avatars/orc-standing.png", Avatar.Animation.STANDING, Avatar.Race.ORC));
             avatars.save(new Avatar("avatars/orc-jumping.png", Avatar.Animation.JUMPING, Avatar.Race.ORC));
             avatars.save(new Avatar("avatars/skeleton-standing.png", Avatar.Animation.STANDING, Avatar.Race.SKELETON));
@@ -123,6 +127,19 @@ public class TOAdventureController {
             npcs.save(new NPC("health/health.png", NPC.Category.HEALTH));
         }
 
+        if (bosses.count() == 0) {
+            bosses.save(new Boss("bosses/mage-standing.png"));
+        }
+
+        if (bossassets.count() == 0) {
+            Boss boss = bosses.findOne(1);
+            bossassets.save(new BossAsset("bossassets/mage-bullet1.png", boss));
+            bossassets.save(new BossAsset("bossassets/mage-bullet2.png", boss));
+            bossassets.save(new BossAsset("bossassets/mage-bullet3.png", boss));
+            bossassets.save(new BossAsset("bossassets/mage-bullet4.png", boss));
+            bossassets.save(new BossAsset("bossassets/mage-bullet5.png", boss));
+        }
+
         if (useritems.count() == 0) {
             User user = users.findFirstByUsername("mike");
             useritems.save(new Item("items/axe.png", user));
@@ -136,24 +153,42 @@ public class TOAdventureController {
         h2.stop();
     }
 
-
-    // route allowing users to login to the site and returns a user object to the client.
-
     @RequestMapping(path = "/login", method = RequestMethod.POST)
-    public ResponseEntity<User> postUser(HttpSession session, @RequestBody User user) throws PasswordStorage.CannotPerformOperationException, PasswordStorage.InvalidHashException {
+    public Character postUser(HttpSession session, @RequestBody User user) throws Exception {
         User userFromDb = users.findFirstByUsername(user.getUsername());
         if (userFromDb == null) {
-            return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
+            throw new Exception("User not found.");
+            //return new ResponseEntity<Character>(HttpStatus.NOT_FOUND);
             //user.setPassword(PasswordStorage.createHash(user.getPassword()));
             //users.save(user);
         }
         else if (!PasswordStorage.verifyPassword(user.getPassword(), userFromDb.getPassword())) {
-            return new ResponseEntity<User>(HttpStatus.FORBIDDEN);
+            throw new Exception("Invalid password!");
         }
 
         session.setAttribute("username", user.getUsername());
-        return new ResponseEntity<User>(user, HttpStatus.OK);
+        return characters.findByUser(userFromDb);
     }
+
+
+
+    // route allowing users to login to the site and returns a user object to the client.
+
+//    @RequestMapping(path = "/login", method = RequestMethod.POST)
+//    public ResponseEntity<User> postUser(HttpSession session, @RequestBody User user) throws PasswordStorage.CannotPerformOperationException, PasswordStorage.InvalidHashException {
+//        User userFromDb = users.findFirstByUsername(user.getUsername());
+//        if (userFromDb == null) {
+//            return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
+//            //user.setPassword(PasswordStorage.createHash(user.getPassword()));
+//            //users.save(user);
+//        }
+//        else if (!PasswordStorage.verifyPassword(user.getPassword(), userFromDb.getPassword())) {
+//            return new ResponseEntity<User>(HttpStatus.FORBIDDEN);
+//        }
+//
+//        session.setAttribute("username", user.getUsername());
+//        return new ResponseEntity<User>(user, HttpStatus.OK);
+//    }
 
     // route gets avatars that the user can then choose from, this avatar object is expected back in the post route.
 
@@ -162,21 +197,39 @@ public class TOAdventureController {
         return avatars.findByAnimation(Avatar.Animation.STANDING);
     }
 
+    @RequestMapping(path = "/signup", method = RequestMethod.POST)
+    public Character getUser(HttpSession session, @RequestBody Map<String, String> json) throws PasswordStorage.CannotPerformOperationException {
+        if (json.get("username") == null) {
+            return null;
+        }
+        User user = new User(json.get("username"), PasswordStorage.createHash(json.get("password")));
+        //user.setPassword(PasswordStorage.createHash(user.getPassword()));
+        users.save(user);
+        Avatar avatar1 = avatars.findByFilename(json.get("filename"));
+        Avatar avatar2 = avatars.findOne(avatar1.getId() + 1);
+        Character character = new Character(avatar1.getFilename(), avatar2.getFilename(), 0, 0, 0, 0, user);
+        characters.save(character);
+        session.setAttribute("username", user.getUsername());
+        return character;
+    }
+
     // route recieves a user object and hashes the password and saves it to the database as well as creating a new character object
     // setting the default values and saving that to the database. returns a user object.
 
-    @RequestMapping(path = "/signup", method = RequestMethod.POST)
-    public ResponseEntity<User> getUser(HttpSession session, @RequestBody User user, @RequestBody Avatar avatar) throws PasswordStorage.CannotPerformOperationException {
-        if (user == null) {
-            return new ResponseEntity<User>(HttpStatus.FORBIDDEN);
-        }
-        user.setPassword(PasswordStorage.createHash(user.getPassword()));
-        users.save(user);
-        Character character = new Character(avatar.getFilename(), 0, 0, 0, 0, user);
-        characters.save(character);
-        session.setAttribute("username", user.getUsername());
-        return new ResponseEntity<User>(user, HttpStatus.OK);
-    }
+//    @RequestMapping(path = "/signup", method = RequestMethod.POST)
+//    public Character getUser(HttpSession session, @RequestBody User user, @RequestBody Avatar avatar) throws PasswordStorage.CannotPerformOperationException {
+//        if (user == null) {
+//            return null;
+//        }
+//        user.setPassword(PasswordStorage.createHash(user.getPassword()));
+//        users.save(user);
+//        Avatar avatar1 = avatars.findByFilename(avatar.getFilename());
+//        Avatar avatar2 = avatars.findOne(avatar1.getId() + 1);
+//        Character character = new Character(avatar.getFilename(), avatar2.getFilename(), 0, 0, 0, 0, user);
+//        characters.save(character);
+//        session.setAttribute("username", user.getUsername());
+//        return character;
+//    }
 
     // route returns a user object to the client.
 
@@ -315,7 +368,9 @@ public class TOAdventureController {
         User user = users.findFirstByUsername("mike");
         //User user = users.findFirstByUsername(username);
         //Avatar avatarFromDb = avatars.findOne(avatar.getId() + 1);
-        characters.save(new Character(avatar.getFilename(), 0, 0, 0, 0, user));
+        Avatar avatar1 = avatars.findByFilename(avatar.getFilename());
+        Avatar avatar2 = avatars.findOne(avatar1.getId() + 1);
+        characters.save(new Character(avatar.getFilename(), avatar2.getFilename(), 0, 0, 0, 0, user));
         //characters.save(new Character(avatarFromDb.getFilename(), 0, 0, user));
         return avatars.findByRace(avatar.getRace());
     }
@@ -324,10 +379,10 @@ public class TOAdventureController {
 
     @RequestMapping(path = "/user-avatar", method = RequestMethod.GET)
     public ArrayList<Avatar> getUserAvatar(HttpSession session) throws Exception {
-        String username = (String) session.getAttribute("username");
-        if (username == null) {
-            throw new Exception("Not logged in");
-        }
+//        String username = (String) session.getAttribute("username");
+//        if (username == null) {
+//            throw new Exception("Not logged in");
+//        }
         //User user = users.findFirstByUsername(username);
         ArrayList<Avatar> theAvatars = new ArrayList<>();
         //User user = users.findFirstByUsername(username);
@@ -420,5 +475,24 @@ public class TOAdventureController {
     @RequestMapping(path = "/logout", method = RequestMethod.POST)
     public void logout(HttpSession session) {
         session.invalidate();
+    }
+
+    // route to get back a boss
+
+    @RequestMapping(path = "/boss", method = RequestMethod.GET)
+    public Boss getBoss(HttpSession session) {
+        return bosses.findOne(1);
+    }
+
+    // route to get back all the assets, all the projectiles the boss will be throwing, to the client.
+
+    @RequestMapping(path = "bossassets", method = RequestMethod.GET)
+    public ArrayList<BossAsset> getBossAssets(HttpSession session) {
+        ArrayList<BossAsset> bossAssets = new ArrayList<>();
+        for (int i = 0; i < 300; i++) {
+            int randId = (int) (Math.random() * (5 - 1)) + 1;
+            bossAssets.add(bossassets.findOne(randId));
+        }
+        return bossAssets;
     }
 }
