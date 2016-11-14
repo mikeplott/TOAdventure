@@ -49,6 +49,7 @@ const ACTIONS = {
 
          console.log(serverRes)
          STORE.setStore('currentUser', serverRes)
+         sessionStorage.setItem("crntPlayer", JSON.stringify(serverRes));
 
       })
 
@@ -76,7 +77,7 @@ const ACTIONS = {
 
       newUser.save().then(function(serverRes){
          STORE.setStore('currentUser', serverRes)
-
+         sessionStorage.setItem("crntPlayer", JSON.stringify(serverRes));
       })
 
    },
