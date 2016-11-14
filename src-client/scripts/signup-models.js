@@ -1,6 +1,6 @@
 const Backbone = require('backbone')
 
-const SignupModel = Backbone.Model.extend({
+const SignUpModel = Backbone.Model.extend({
 
    url: "/signup",
 
@@ -10,12 +10,12 @@ const SignupModel = Backbone.Model.extend({
 })
 
 
-const SignupCollection = Backbone.Collection.extend({
+const SignUpCollection = Backbone.Collection.extend({
 
-   model: SignupModel,
+   model: SignUpModel,
    // set route to get route on java side
    url: "/signup"
 
 })
 
-module.exports = {SignupModel, SignupCollection}
+module.exports = {SignUpModel, SignUpCollection}
