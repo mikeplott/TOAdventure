@@ -40,11 +40,11 @@ const ACTIONS = {
       let usrLogin = new UserModel()
 
       usrLogin.set(usrInfo)
-      console.log(usrLogin)
+      console.log( "hey" ,usrLogin)
 
       usrLogin.save().then(function(serverRes){
 
-         console.log(serverRes)
+         console.log( "tickle me" ,serverRes)
       })
 
 
