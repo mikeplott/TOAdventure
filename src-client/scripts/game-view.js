@@ -6,6 +6,10 @@ const {HomeView, dummyUsers, NavView} = require("./home-view.js")
 const {ObstacleModel, ObstacleCollection} = require('./model-assets.js')
 const ACTIONS = require('./actions.js')
 
+var globalScore =0;
+var globalLevel =1;
+var globalMoney =0;
+
 let leaderBoardData = dummyUsers.map((someData, i)=>{
    return (
       <li key={i}>
@@ -34,7 +38,7 @@ const GameView = React.createClass({
    render: function(){
       console.log(this.refs)
       console.log(this.props.crntUser)
-
+      let logedUserData = JSON.parse(sessionStorage.getItem("crntPlayer"));
 
       return(
          <div>
@@ -47,8 +51,10 @@ const GameView = React.createClass({
                   <div className="col-xs-2 leader-board">
                      <h2>Player Stats</h2>
                      <ul>
-                        <li>Score:0000</li>
-                        <li>Money:0000</li>
+                        <h3>Username</h3>
+                        <li>Score: {globalScore}</li>
+                        <li>Money: {globalMoney}</li>
+                        <li>Level: {globalLevel}</li>
                         <li>Inventory:</li>
                      </ul>
                   </div>
@@ -379,10 +385,11 @@ const GameView = React.createClass({
 
             var objectThrowing = function(){
                var itemTracks = [25,50,75,100,125]
-               var xTracks = [900,925,950,975,1000]
+               var xTracks = [900,950,1000,800,700]
               if(Date.now() > startTime){
 
                if(displayedObjects.length === 0){
+                  globalLevel += 1;
                 level += 1;
               }
 
@@ -436,6 +443,7 @@ const GameView = React.createClass({
                 if(collision(item)){
                   if(item.name === "ENEMY"){
                      item.active = false
+                     globalScore += -5;
                      score += -5;
                      if(health > 0){
                        health += -1;
@@ -446,10 +454,12 @@ const GameView = React.createClass({
                   } else if (item.name === "ITEM"){
                      itemSound.play()
                      item.active = false
+                     globalScore += 5;
                      score += 5;
                   } else if (item.name === "MONEY"){
                      moneySound.play()
                      item.active = false
+                     globalMoney += 1;
                      score += 10;
                   } else if (item.name === "HEALTH"){
                      item.active = false

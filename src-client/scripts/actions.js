@@ -8,6 +8,10 @@ const STORE = require("./store.js")
 
 const ACTIONS = {
 
+   postCheckpointData: function(){
+      
+   },
+
    fetchHighScores: function(){
       let scores = new HighScoreCollection()
 

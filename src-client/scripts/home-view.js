@@ -41,6 +41,7 @@ let dummyUsers = [
 const NavView = React.createClass({
 
 
+
    render:function(){
 
       return(
@@ -53,7 +54,7 @@ const NavView = React.createClass({
                <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                   <ul className="nav navbar-nav">
                      <li className="active"><a href="#">Home<span className="sr-only">(current)</span></a></li>
-                     <li><a href="#game">Play</a></li>
+                     <li><a href="#game" onClick={function(){window.location.reload();}}>Play</a></li>
 
                   </ul>
                   <form className="navbar-form navbar-left" role="search">
@@ -62,7 +63,7 @@ const NavView = React.createClass({
 
                   </form>
                   <ul className="nav navbar-nav navbar-right">
-                     <li><a href="login">Login</a></li>
+                     <li><a href="#">Logout</a></li>
                   </ul>
                </div>
             </div>
@@ -112,7 +113,7 @@ const HomeView = React.createClass({
       return (
 
          <div>
-            
+
             <NavView/>
             <div>
                <div>
