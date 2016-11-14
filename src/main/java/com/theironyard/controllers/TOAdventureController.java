@@ -197,6 +197,10 @@ public class TOAdventureController {
         return avatars.findByAnimation(Avatar.Animation.STANDING);
     }
 
+    // route receives a map of json key value pairs. keys are "username", "password" and "filename".
+    // the user is created with the value of keys username and password and then the character is created by
+    // getting both avatars that are paired with the filename of what is coming back.
+
     @RequestMapping(path = "/signup", method = RequestMethod.POST)
     public Character getUser(HttpSession session, @RequestBody Map<String, String> json) throws PasswordStorage.CannotPerformOperationException {
         if (json.get("username") == null) {
