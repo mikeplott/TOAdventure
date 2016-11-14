@@ -100,8 +100,6 @@ const CharPickModal = React.createClass({
          username: this.refs.username.value,
          password: this.refs.password.value
 
-
-
       }
       ACTIONS.createNewUser(newUser)
 
@@ -163,13 +161,15 @@ const AvatarEl = React.createClass({
    render: function(){
 
 
-
       return (
          <div>
             <h3>{this.props.avatarName}</h3>
-            <img src={this.props.fileName} alt=""/>
-            <input type="checkbox" ref={this.props.avatarName}/>
+            <a className="avatars" onClick={this._selectedChar} href={"#signup/" + this.props.fileName}>
+               <img src={this.props.fileName} alt=""/>
+            </a>
          </div>
+
+
 
       )
    }
