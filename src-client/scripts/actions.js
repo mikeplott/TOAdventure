@@ -55,9 +55,9 @@ const ACTIONS = {
    createNewUser: function(modlVals){
       let newUser = new SignUpModel()
 
-      newMod.set(modlVals)
+      newUser.set(modlVals)
 
-      newMod.save().then(function(serverRes){
+      newUser.save().then(function(serverRes){
          console.log(serverRes)
       })
 
