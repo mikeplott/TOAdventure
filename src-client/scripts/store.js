@@ -10,7 +10,7 @@ const STORE = {
       currentUser: [],
       highscore: [],
       selectedAvatar: '',
-      currentUser: []
+      currentUser: {}
 
    },
 
