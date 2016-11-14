@@ -1,5 +1,6 @@
 
 @import "../../node_modules/bootstrap-sass/assets/stylesheets/_bootstrap.scss";
+
 * {
 	box-sizing: border-box;
 }
@@ -7,6 +8,7 @@
 body{
 	font-family: Helvetica, Arial, sans-serif;
 }
+
 #app-container{
 	.game-canvas{
 			margin: 0 auto;
@@ -15,4 +17,41 @@ body{
 			background: rgb(15,15,15);
 			border: 5px #fff solid;
 		}
+<<<<<<< HEAD
+	.homeBoxes {
+		background: #DDD;
+		color: #111;
+	}
+	.homeLogo {
+		width: 50%;
+		margin-left: 20%;
+		margin-bottom: 5%;
+	}
+
+	.homeContent{
+		padding: 20px;
+		width: 60%;
+		margin-left: 5%;
+	}
+
+	.homeBoard{
+		margin-left: 5%;
+	}
+
+	footer{
+		div{
+			display: inline-block;
+			margin: auto 20px;
+		}
+		.gitHolder{
+			text-align: right;
+			float: right;
+		}
+		.gitUsers{
+			margin-left: 15px;
+		}
+	}
+=======
+>>>>>>> 560f0b8b340234bb643573c375f6346fc1c47921
+
 }

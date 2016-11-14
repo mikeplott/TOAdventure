@@ -26,7 +26,7 @@ const AppView = React.createClass({
    render: function(){
       switch (this.props.currentView) {
          case "home":
-            return <HomeView/>
+            return <HomeView highscoreData={this.state.highscore}/>
             break;
          case "login":
             return <ModalView crntView="login"/>
