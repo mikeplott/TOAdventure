@@ -24,6 +24,7 @@ const AppView = React.createClass({
    },
 
    render: function(){
+
       switch (this.props.currentView) {
          case "home":
             return <HomeView highscoreData={this.state.highscore}/>
@@ -33,10 +34,12 @@ const AppView = React.createClass({
             break;
          case "signup":
             return <ModalView crntView="signup" avatarData ={this.state.avatars}/>
+            break;
          case "game":
-            return <GameView/>
+            return <GameView crntUser={this.state.currentUser}/>
+            break;
          default:
-            return <h1> Page Not Found</h1>
+            
             break;
       }
 
