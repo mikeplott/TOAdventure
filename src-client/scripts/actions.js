@@ -43,8 +43,8 @@ const ACTIONS = {
       console.log(usrLogin)
 
       usrLogin.save().then(function(serverRes){
-
          console.log(serverRes)
+         STORE.setStore('currentUser', serverRes)
       })
 
 
@@ -70,6 +70,7 @@ const ACTIONS = {
 
       newUser.save().then(function(serverRes){
          STORE.setStore('currentUserData', serverRes)
+
       })
 
    },
