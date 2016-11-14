@@ -43,13 +43,13 @@ const ACTIONS = {
       console.log( "hey" ,usrLogin)
 
       usrLogin.save().then(function(serverRes){
-<<<<<<< HEAD
+
 
          console.log( "tickle me" ,serverRes)
-=======
+
          console.log(serverRes)
          STORE.setStore('currentUser', serverRes)
->>>>>>> d395846329178e26751563d6ac80a02fb9639134
+
       })
 
 
