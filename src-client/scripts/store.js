@@ -7,7 +7,8 @@ const STORE = {
       all_users: [],
       avatars: [],
       currentView: "Home",
-      currentUser: []
+      currentUser: [],
+      highscore: []
 
    },
 
