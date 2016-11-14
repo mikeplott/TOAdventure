@@ -75,7 +75,7 @@ public class TOAdventureController {
             User user4 = users.findFirstByUsername("nick");
             characters.save(new Character("avatars/human-standing.png", "avatars/human-jumping.png", 0, 12, 0, 0, user));
             characters.save(new Character("avatars/elf-standing.png", "avatars/elf-jumping.png", 0, 143, 0, 0, user1));
-            characters.save(new Character("avatars/dark-elf-standing.png", "avatars/dark-elf-jumping.png", 0, 1235, 0, 0, user2));
+            characters.save(new Character("avatars/mister-t-standing.png", "avatars/mister-t-jumping.png", 0, 1235, 0, 0, user2));
             characters.save(new Character("avatars/orc-standing.png", "avatars/orc-jumping.png", 0, 1234123, 0, 0, user3));
             characters.save(new Character("avatars/skeleton-standing.png", "avatars/skeleton-jumping.png", 0, 13422141, 0, 0, user4));
         }
@@ -87,12 +87,15 @@ public class TOAdventureController {
             avatars.save(new Avatar("avatars/elf-standing.png", Avatar.Animation.STANDING, Avatar.Race.ELF));
             avatars.save(new Avatar("avatars/elf-jumping.png", Avatar.Animation.JUMPING, Avatar.Race.ELF));
             avatars.save(new Avatar("avatars/elf-death.png", Avatar.Animation.DEATH, Avatar.Race.ELF));
-            avatars.save(new Avatar("avatars/dark-elf-standing.png", Avatar.Animation.STANDING, Avatar.Race.MISTER_T));
-            avatars.save(new Avatar("avatars/dark-elf-jumping.png", Avatar.Animation.JUMPING, Avatar.Race.MISTER_T));
+            avatars.save(new Avatar("avatars/mister-t-standing.png", Avatar.Animation.STANDING, Avatar.Race.MISTER_T));
+            avatars.save(new Avatar("avatars/mister-t-jumping.png", Avatar.Animation.JUMPING, Avatar.Race.MISTER_T));
+            avatars.save(new Avatar("avatars/mister-t-death.png", Avatar.Animation.DEATH, Avatar.Race.MISTER_T));
             avatars.save(new Avatar("avatars/orc-standing.png", Avatar.Animation.STANDING, Avatar.Race.ORC));
             avatars.save(new Avatar("avatars/orc-jumping.png", Avatar.Animation.JUMPING, Avatar.Race.ORC));
+            avatars.save(new Avatar("avatars/orc-death.png", Avatar.Animation.DEATH, Avatar.Race.ORC));
             avatars.save(new Avatar("avatars/skeleton-standing.png", Avatar.Animation.STANDING, Avatar.Race.SKELETON));
             avatars.save(new Avatar("avatars/skeleton-jumping.png", Avatar.Animation.JUMPING, Avatar.Race.SKELETON));
+            avatars.save(new Avatar("avatars/skeleton-death.png", Avatar.Animation.DEATH, Avatar.Race.SKELETON));
         }
 
         if (npcs.count() == 0) {
